@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="fr">
   <head>
     <meta charset="utf-8">
@@ -35,6 +35,11 @@
                       </div>
                       <button type="submit" name="searchButton" class="btn btn-default">Rechercher</button>
                   </form>
+                  <?php
+                  if (isset($_POST['searchText'])) {
+                      # rechercher dans le moteur de recherche de la base
+                  }
+                   ?>
                   <div class="container">
                       <ul class="nav navbar-nav">
                           <li> <a href="login.html">Connexion</a> </li>
