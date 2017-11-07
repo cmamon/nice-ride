@@ -48,6 +48,7 @@ Le profil d’invité permet :
 * De lister les trajets proposés entre deux villes à une date donnée sans pouvoir accéder aux
 informations concernant les conducteurs (hormis leurs prénoms).
 _Les trajets pourraient être triés chronologiquement ou par prix ascendant._
+
 L’évaluation de ce projet pour l’UE HLIN511 se focalisera sur les points suivants (il est donc possible de
 ne rendre un projet allégé au niveau fonctionnel et des interfaces que pour cette UE) :
 * Tout ou une partie des traitements métiers devra être implémenté au travers de la surcouche

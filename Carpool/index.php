@@ -1,11 +1,12 @@
-
+<?php session_start(); ?>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Carpool</title>
+    <title>Nice Ride</title>
 
     <link rel="icon" href="http://example.com/favicon.png">
 
@@ -27,9 +28,9 @@
           <nav class="navbar navbar-default navbar-static-top">
               <div class="container-fluid">
                   <div class="navbar-header">
-                      <a class="navbar-brand" href="index.html">Carpool</a>
+                      <a class="navbar-brand" href="index.php">Nice ride</a>
                   </div>
-                  <form action="index.php" method="post" class="navbar-form navbar-left"  >
+                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="navbar-form navbar-left"  >
                       <div class="form-group">
                           <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
                       </div>
@@ -42,8 +43,8 @@
                    ?>
                   <div class="container">
                       <ul class="nav navbar-nav">
-                          <li> <a href="login.html">Connexion</a> </li>
-                          <li> <a href="signup.html">Nouveau membre</a> </li>
+                          <li> <a href="login.php">Connexion</a> </li>
+                          <li> <a href="signup.php">Nouveau membre</a> </li>
                       </ul>
                       <!-- <button type="button" class="btn btn-default navbar-btn">Se connecter</button> -->
                   </div>
