@@ -1,4 +1,3 @@
-<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -14,7 +13,7 @@
     <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="style.css"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,53 +24,70 @@
   </head>
   <body>
       <header>
-          <nav class="navbar navbar-default navbar-static-top">
-              <div class="container-fluid">
-                  <div class="navbar-header">
-                      <a class="navbar-brand" href="index.php">Nice ride</a>
-                  </div>
-                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="navbar-form navbar-left"  >
-                      <div class="form-group">
-                          <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
+              <nav class="navbar navbar-default navbar-static-top">
+                  <div class="container-fluid">
+                      <div class="navbar-header">
+                          <a class="navbar-brand" href="index.php">Nice Ride</a>
                       </div>
-                      <button type="submit" name="searchButton" class="btn btn-default">Rechercher</button>
-                  </form>
-                  <?php
-                  if (isset($_POST['searchText'])) {
-                      # rechercher dans le moteur de recherche de la base
-                  }
-                   ?>
-                  <div class="container">
-                      <ul class="nav navbar-nav">
-                          <li> <a href="login.php">Connexion</a> </li>
-                          <li> <a href="signup.php">Nouveau membre</a> </li>
-                      </ul>
-                      <!-- <button type="button" class="btn btn-default navbar-btn">Se connecter</button> -->
+                      <div class="container">
+                          <ul class="nav navbar-nav">
+                              <li> <a href="login.php">Connexion</a> </li>
+                              <li> <a href="signup.php">Nouveau membre</a> </li>
+                          </ul>
+                          <!-- <button type="button" class="btn btn-default navbar-btn">Se connecter</button> -->
+                      </div>
+                  </div><!-- /.container-fluid -->
+              </nav>
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="navbar-form navbar-left"  >
+                  <div class="form-group">
+                      <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
                   </div>
-              </div><!-- /.container-fluid -->
-          </nav>
+                  <button type="submit" name="searchButton" class="btn btn-default">Rechercher</button>
+              </form>
       </header>
 
+      <?php
+      if (isset($_POST['searchText'])) {
+          # rechercher dans le moteur de recherche de la base
+      }
+      ?>
       <h1>Bienvenue sur votre site de covoiturage préféré<br><small>Vous ne le quitterez plus ;)</small></h1>
 
-      <ul>
-          <li><a href="Something1">Voyager </a></li>
-          <li><a href="Something2">Proposer un trajet </a></li>
-      </ul>
+      <div class="travel">
+          <div class="voyager">
+              <div id="flip">
+                  <h3>Voyager</h3>
+              </div>
+              <div id="panel">
+                  <span class="glyphicon glyphicon-map-marker" aria-hidden="true" id=map-marker1></span>
+                  <input type="text" class="form-control" placeholder="Ville de départ" aria-describedby="map-marker1">
+              </div>
+          </div>
 
+          <br><br>
 
-      <footer>
-          <ul class="nav nav-pills">
-              <li role="presentation"><a href="contact.html">Nous contacter</a></li>
-              <li role="presentation"><a href="help.html">Aide</a></li>
-              <li role="presentation"><a href="faq.html">F.A.Q</a></li>
-          </ul>
-      </footer>
+              <p> <a href="propose.php">Proposez un voyage</a>
+      </div>
+
+<footer>
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="contact.html">Nous contacter</a></li>
+        <li role="presentation"><a href="help.html">Aide</a></li>
+        <li role="presentation"><a href="faq.html">F.A.Q</a></li>
+    </ul>
+</footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 
-  </body>
+    <script>
+    $(document).ready(function(){
+        $("#flip").click(function(){
+            $("#panel").slideToggle("slow");
+        });
+    });
+    </script>
+
 </html>

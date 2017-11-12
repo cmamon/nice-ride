@@ -9,7 +9,7 @@
         <title>Connexion</title>
 
         <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="index.css"/>
+        <link rel="stylesheet" href="style.css"/>
 
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -22,9 +22,9 @@
             <nav class="navbar navbar-default navbar-static-top">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="index.php">Nice ride</a>
+                        <a class="navbar-brand" href="index.php">Nice Ride</a>
                     </div>
-                    <form action="index.php" method="post" class="navbar-form navbar-left"  >
+                    <form action="index.php" method="post" class="navbar-form navbar-left">
                         <div class="form-group">
                             <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
                         </div>
@@ -37,10 +37,9 @@
         <?php
         if ($_POST['connexion']) {
             if (isset($_POST['email'])) {
-                //  Vérifier que l'adresse email existe bien dans la base de donnee
-            }
-            if (isset($_POST['password'])) {
-                //  Verifier que le mot de passe existe bien dans la base de donnee
+                if (match_found_in_database()) {
+                    $_SESSION['loggedin'] = true;
+                }
             }
         }
 
@@ -61,7 +60,7 @@
           <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">Mot de passe</label>
             <div class="col-sm-10">
-              <input type="password" class="form-control" id="inputPassword3" name="password" placeholder="Password" >
+              <input type="password" class="form-control" id="inputPassword3" name="password" placeholder="Password" required>
             </div>
           </div>
           <div class="form-group">

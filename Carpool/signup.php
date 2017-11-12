@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
         <title>S'inscrire</title>
 
         <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="index.css"/>
+        <link rel="stylesheet" href="style.css"/>
 
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -21,7 +22,7 @@
             <nav class="navbar navbar-default navbar-static-top">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="index.php">Nice ride</a>
+                        <a class="navbar-brand" href="index.php">Nice Ride</a>
                     </div>
                     <form action="index.php" method="post" class="navbar-form navbar-left"  >
                         <div class="form-group">
@@ -57,31 +58,58 @@
 
         <form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control" id="inputEmail3" placeholder="Saisissez votre adresse email">
+                <label for="inputLastName" class="col-sm-2 control-label">Nom</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputLastName" placeholder="Saisissez votre nom de famille" required>
+                </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Mot de passe</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" id="inputPassword3" placeholder="">
+
+            <div class="form-group">
+                <label for="inputFirstName" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputFirstName" placeholder="Saisissez votre adresse email" required>
+                </div>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Se rappeler de moi
-                </label>
-              </div>
+
+            <div class="form-group">
+                <label for="inputPhoneNumber" class="col-sm-2 control-label">Tel</label>
+                <div class="col-sm-10">
+                    <input type="tel" class="form-control" id="inputPhoneNumber" placeholder="Saisissez votre numéro de téléphone portable" required>
+                </div>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <input type="submit" value="S'enregistrer"/>
+
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Saisissez votre adresse email" required>
+                </div>
             </div>
-          </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label">Mot de passe</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Choisissez un mot de passe" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputConfirmationPassword" class="col-sm-2 control-label">Confirmation</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="inputConfirmationPassword3" placeholder="Saisissez à nouveau votre mot de passe" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Se rappeler de moi
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" value="S'enregistrer"/>
+                </div>
+            </div>
         </form>
 
         <p>Vous possédez déjà un compte? <a href="login.php">Enregistrez vous</a> !</p>
