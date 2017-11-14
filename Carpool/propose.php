@@ -10,7 +10,7 @@
         <title>Proposer un voyage</title>
 
         <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="style.css"/>
+        <link rel="stylesheet" href="CSS/style.css"/>
 
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -19,18 +19,12 @@
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-default navbar-static-top">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="index.php">Nice Ride</a>
-                    </div>
-                    <form action="index.php" method="post" class="navbar-form navbar-left"  >
-                        <div class="form-group">
-                            <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
-                        </div>
-                        <button type="submit" name="searchButton" class="btn btn-default">Rechercher</button>
-                    </form>
-                </div><!-- /.container-fluid -->
+            <nav>
+                <a id="brand" href="index.php">Nice Ride</a>
+                <ul>
+                    <li> <a href="login.php">CONNEXION</a> </li>
+                    <li> <a href="signup.php">S'INSCRIRE</a> </li>
+                </ul>
             </nav>
         </header>
 
@@ -42,19 +36,31 @@
             // }
         ?>
         <h3>Carte de Montpellier</h3>
-        <div id="map_canvas"></div>
+        <div id="map"></div>
 
         <footer>
-            <ul class="nav nav-pills">
-                <li role="presentation"><a href="contact.html">Nous contacter</a></li>
-                <li role="presentation"><a href="help.html">Aide</a></li>
-                <li role="presentation"><a href="faq.html">F.A.Q</a></li>
+            <ul>
+                <li><a href="contact.html">Nous contacter</a></li>
+                <li><a href="help.html">Aide</a></li>
+                <li><a href="faq.html">F.A.Q</a></li>
             </ul>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+        function initMap(){
+            var montpellier = {lat: 43.6111, lng: 3.87667};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: montpellier,
+                zoom: 8
+            });
+            var marker = new google.maps.Marker({
+                position: montpellier,
+                map: map
+            });
+        }
+        </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVEJd3oceuJC5ivSIjaWvJomYNxc2JR_A&callback=initMap" async defer></script>
-        <script type="text/javascript" src="JS/mapSettings.js"></script>
     </body>
 </html>

@@ -1,6 +1,16 @@
-var latlng = new google.maps.LatLng(43.6111, 3.87667);
-var options = { zoom: 15,
-                center: latlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+var options = {
+    types: ['(cities)'],
+    componentRestrictions: {country: "fr"}
 };
-var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+function activatePlacesSearch1(){
+    var input = document.getElementById('departureCity');
+    var autocomplete = new google.maps.places.Autocomplete(input, options);
+}
+function activatePlacesSearch2(){
+    var input = document.getElementById('arrivalCity');
+    var autocomplete = new google.maps.places.Autocomplete(input, options);
+}
+function searchPlaces() {
+    activatePlacesSearch1();
+    activatePlacesSearch2();
+}
