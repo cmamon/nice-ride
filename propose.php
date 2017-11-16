@@ -35,15 +35,21 @@
             //     echo "Please log in first to see this page.";
             // }
         ?>
-        <h3>Carte de Montpellier</h3>
-        <div id="map"></div>
+        <div class="twoParts">
+            <div class="part1">
+                <h3>Carte de Montpellier</h3>
+            </div>
+            <div class="part2">
+                <div id="map"></div>
+            </div>
+        </div>
 
         <footer>
-            <ul>
-                <li><a href="contact.html">Nous contacter</a></li>
-                <li><a href="help.html">Aide</a></li>
-                <li><a href="faq.html">F.A.Q</a></li>
-            </ul>
+            <div id="bottomLinks">
+                <a href="contact.html">Nous contacter</a>
+                <a href="help.html">Aide</a>
+                <a href="faq.html">F.A.Q</a>
+            </div>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

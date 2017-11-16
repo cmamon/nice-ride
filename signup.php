@@ -19,18 +19,12 @@
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-default navbar-static-top">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="index.php">Nice Ride</a>
-                    </div>
-                    <form action="index.php" method="post" class="navbar-form navbar-left"  >
-                        <div class="form-group">
-                            <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
-                        </div>
-                        <button type="submit" name="searchButton" class="btn btn-default">Rechercher</button>
-                    </form>
-                </div><!-- /.container-fluid -->
+            <nav>
+                <a id="brand" href="index.php">Nice Ride</a>
+                <ul>
+                    <li> <a href="login.php">CONNEXION</a> </li>
+                    <li> <a href="signup.php">S'INSCRIRE</a> </li>
+                </ul>
             </nav>
         </header>
 
@@ -115,11 +109,11 @@
         <p>Vous possédez déjà un compte? <a href="login.php">Enregistrez vous</a> !</p>
 
         <footer>
-            <ul class="nav nav-pills">
-                <li role="presentation"><a href="contact.html">Nous contacter</a></li>
-                <li role="presentation"><a href="help.html">Aide</a></li>
-                <li role="presentation"><a href="faq.html">F.A.Q</a></li>
-            </ul>
+            <div id="bottomLinks">
+                <a href="contact.html">Nous contacter</a>
+                <a href="help.html">Aide</a>
+                <a href="faq.html">F.A.Q</a>
+            </div>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

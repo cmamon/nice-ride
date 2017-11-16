@@ -19,18 +19,12 @@
     <body>
                               <!-- HEADER -->
         <header>
-            <nav class="navbar navbar-default navbar-static-top">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="index.php">Nice Ride</a>
-                    </div>
-                    <form action="index.php" method="post" class="navbar-form navbar-left">
-                        <div class="form-group">
-                            <input type="text" name="searchText" class="form-control" placeholder="Rechercher un trajet">
-                        </div>
-                        <button type="submit" name="searchButton" class="btn btn-default">Recherche</button>
-                    </form>
-                </div><!-- /.container-fluid -->
+            <nav>
+                <a id="brand" href="index.php">Nice Ride</a>
+                <ul>
+                    <li> <a href="login.php">CONNEXION</a> </li>
+                    <li> <a href="signup.php">S'INSCRIRE</a> </li>
+                </ul>
             </nav>
         </header>
 
@@ -46,45 +40,33 @@
         if (isset($_POST['remerberMe'])) {
 
         }
-         ?>
+        ?>
 
-                             <!-- MAIN CONTENT -->
-
-        <form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-          <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control" id="inputEmail3" name="email" placeholder="Email" required>
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <div class="loginForm">
+                <form class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" id="inputEmail" name="email" placeholder="Email" required>
+                    <br>
+                    <label for="inputPassword">Mot de passe</label>
+                    <input type="password" id="inputPassword" name="password" placeholder="Password" required>
+                    <br>
+                    <label>
+                        <input type="checkbox" name="rememberMe"> Se rappeler de moi
+                    </label>
+                    <br>
+                    <button type="submit" class="button" name="connexion">Connexion</button>
+                </form>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Mot de passe</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" id="inputPassword3" name="password" placeholder="Password" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="rememberMe"> Se rappeler de moi
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <input type="submit" name="connexion" value="Connexion" />
-            </div>
-          </div>
-        </form>
+        </div>
 
         <footer>
-            <ul class="nav nav-pills">
-                <li role="presentation"><a href="contact.html">Nous contacter</a></li>
-                <li role="presentation"><a href="help.html">Aide</a></li>
-                <li role="presentation"><a href="faq.html">F.A.Q</a></li>
-            </ul>
+            <div id="bottomLinks">
+                <a href="contact.html">Nous contacter</a>
+                <a href="help.html">Aide</a>
+                <a href="faq.html">F.A.Q</a>
+            </div>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

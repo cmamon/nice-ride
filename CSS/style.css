@@ -8,22 +8,23 @@ body {
 
 header{
     background-color: #333;
-    height: 300px;
     content: '';
     position: relative;
-    -moz-box-shadow: 0px 10px 15px rgba(0, 0, 0,0.5);
+    -moz-box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.5);
     -webkit-box-shadow: 0px 10px 15px rgba(0, 0, 0, .5);
     box-shadow: 0px 10px 15px rgba(0, 0, 0, .5);
 }
 
-
+.homePageBanner {
+    height: 300px;
+}
 
 nav ul{
     text-align: right;
     margin-right: 40px;
 }
 
-nav li, footer li{
+nav li{
     list-style-type: none;
     padding-left: 20px;
     display: inline;
@@ -31,7 +32,6 @@ nav li, footer li{
 
 nav a, footer a{
     position: relative;
-    text-align: left;
     font-size: 15px;
     color: white;
     font-family: sans-serif;
@@ -59,22 +59,52 @@ h2 {
     top: 20px;
 }
 
-#map {
-    background-color: blue;
-    width:450px;
-    height:450px;
-    position: absolute;
-    right: 50px;
+.twoParts {
+    overflow: auto;
+}
+
+.part1 {
+    float: left;
+}
+
+.part2 {
+    float: right;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.panel {
+    display:table-cell;
+    vertical-align: middle;
+    width: 300px;
+    height: 300px;
+    background-color: #FF4500;
+}
+
+.panel p {
+    margin: auto;
+    color: white;
+    font-size: 35px;
 }
 
 footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    box-shadow: 15px 0px 20px rgba(255, 0, 0, .5);
     text-align: center;
-    position: relative;
-    bottom: 0px;
     width:100%;
-    /*padding-top:50px;*/
     height:60px;
     background-color: #555;
+}
+
+footer a {
+    margin : 50px;
+}
+
+#bottomLinks{
+    position: relative;
+    top: 15px;
 }
 
 .propose p{
@@ -97,11 +127,16 @@ footer {
 }
 
 .propose a:hover{
-    box-shadow: 0 0 0 2px rgba(0, 0, 100, 0.2);
+    box-shadow: 0 0 5px rgba(100, 0, 0, 0.3);
 }
 
-.propose, .community {
+.propose {
     height: 250px;
+    text-align: center;
+}
+
+.community {
+    height: 350px;
     text-align: center;
 }
 
@@ -111,9 +146,8 @@ footer {
     background-color: white;
     color: black;
     padding: 14px 40px;
-    border: 2px solid #008CBA;
+    border: 2px solid #008CBA; /*#F3FAB6*/
     border-radius: 2px;
-    /*font-size: 1px;*/
 }
 
 .button:hover {
@@ -127,7 +161,7 @@ footer {
     text-align: center;
 }
 
-input[type=text]{
+.searchGroup input[type=text]{
     padding: 12px 40px;
     margin: 8px 0;
     width: 17%;
@@ -139,7 +173,7 @@ input[type=text]{
     border-radius: 2px;
 }
 
-input[type=text]:focus {
+.searchGroup input[type=text]:focus {
     border: 3px solid #008CBA;
 }
 
@@ -153,4 +187,49 @@ input[type=text]:focus {
     background-image: url('../images/calendar.png');
     background-position: 5px 5px;
     background-repeat: no-repeat;
+}
+
+
+/* propose.php */
+
+
+#map {
+    width:400px;
+    height:400px;
+}
+
+
+/*login.php*/
+
+.main {
+    width: 80%;
+    position:relative;
+}
+
+.loginForm {
+    height: 450px;
+    position:absolute;
+    left:50%;
+    /*display: table-cell;*/
+    /*vertical-align: middle;*/
+    border-radius: 5px;
+    border-color: #CCC;
+    background-color: #EEE;
+    border-style: solid;
+    border-width: 1px;
+    width: 60%;
+    margin-left:-30%;
+    top:50%;
+    margin-top:-225px;
+}
+
+.loginForm input[type=text], input[type=email], input[type=password] {
+    padding: 12px 40px;
+    margin: 8px 0;
+    width: 40%;
+    box-sizing: border-box;
+    border: none;
+    background-color: rgba(255, 69, 0, 0.6);
+    color: white;
+    border-radius: 4px;
 }
