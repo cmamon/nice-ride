@@ -19,13 +19,15 @@
     <body>
                               <!-- HEADER -->
         <header>
-            <nav>
-                <a id="brand" href="index.php">Nice Ride</a>
-                <ul>
-                    <li> <a href="login.php">CONNEXION</a> </li>
-                    <li> <a href="signup.php">S'INSCRIRE</a> </li>
-                </ul>
-            </nav>
+            <div class="defaultNav">
+                <nav>
+                    <a id="brand" href="index.php">Nice Ride</a>
+                    <ul>
+                        <li> <a href="login.php">CONNEXION</a> </li>
+                        <li> <a href="signup.php">S'INSCRIRE</a> </li>
+                    </ul>
+                </nav>
+            </div>
         </header>
 
         <?php
@@ -48,12 +50,12 @@
                 <form class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <label for="inputEmail">Email</label>
                     <input type="email" id="inputEmail" name="email" placeholder="Email" required>
-                    <br>
+                    <!-- <br> -->
                     <label for="inputPassword">Mot de passe</label>
                     <input type="password" id="inputPassword" name="password" placeholder="Password" required>
-                    <br>
+                    <!-- <br> -->
                     <label>
-                        <input type="checkbox" name="rememberMe"> Se rappeler de moi
+                        <input type="checkbox" name="rememberMe" checked="checked"> Se rappeler de moi
                     </label>
                     <br>
                     <button type="submit" class="button" name="connexion">Connexion</button>
