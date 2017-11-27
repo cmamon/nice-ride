@@ -3,19 +3,10 @@
 <html>
 <head>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?php require 'head.html'; ?>
 
         <title>S'inscrire</title>
 
-        <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="CSS/style.css"/>
-
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
     </head>
     <body>
         <header>
@@ -52,70 +43,39 @@
         }
         ?>
 
-        <form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <div class="form-group">
-                <label for="inputLastName" class="col-sm-2 control-label">Nom</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputLastName" placeholder="Saisissez votre nom de famille" required>
-                </div>
-            </div>
+        <div class="main">
+            <div class="loginForm">
+                <form class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <label for="inputLastName">Nom</label>
+                    <input type="text" id="inputLastName" placeholder="Saisissez votre nom de famille" required>
 
-            <div class="form-group">
-                <label for="inputFirstName" class="col-sm-2 control-label">Email</label>
-                <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputFirstName" placeholder="Saisissez votre adresse email" required>
-                </div>
-            </div>
+                    <label for="inputFirstName">Prénom</label>
+                    <input type="text" id="inputFirstName" placeholder="Saisissez votre prénom" required>
 
-            <div class="form-group">
-                <label for="inputPhoneNumber" class="col-sm-2 control-label">Tel</label>
-                <div class="col-sm-10">
-                    <input type="tel" class="form-control" id="inputPhoneNumber" placeholder="Saisissez votre numéro de téléphone portable" required>
-                </div>
-            </div>
+                    <label for="inputPhoneNumber">Tel</label>
+                    <input type="tel" id="inputPhoneNumber" placeholder="Saisissez votre numéro de téléphone portable" required>
 
-            <div class="form-group">
-                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-                <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Saisissez votre adresse email" required>
-                </div>
+                    <label for="inputEmail">Email</label>
+                    <input type="email" id="inputEmail" name="email" placeholder="Email" required>
+                    <!-- <br> -->
+
+                    <label for="inputPassword">Mot de passe</label>
+                    <input type="password" id="inputPassword" name="password" placeholder="Mot de passe" required>
+
+                    <label for="inputConfirmationPassword">Confirmez</label>
+                    <input type="password" id="inputConfirmationPassword" placeholder="Saisissez à nouveau votre mot de passe" required>
+
+                    <!-- <br> -->
+                    <br>
+                    <button type="submit" class="button" name="connexion">S'enregistrer</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="inputPassword" class="col-sm-2 control-label">Mot de passe</label>
-                <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Choisissez un mot de passe" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputConfirmationPassword" class="col-sm-2 control-label">Confirmation</label>
-                <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputConfirmationPassword3" placeholder="Saisissez à nouveau votre mot de passe" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox"> Se rappeler de moi
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <input type="submit" value="S'enregistrer"/>
-                </div>
-            </div>
-        </form>
+        </div>
 
         <p>Vous possédez déjà un compte? <a href="login.php">Enregistrez vous</a> !</p>
 
         <footer>
-            <div id="bottomLinks">
-                <a href="contact.html">Nous contacter</a>
-                <a href="help.html">Aide</a>
-                <a href="faq.html">F.A.Q</a>
-            </div>
+            <?php require 'footer.html'; ?>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
