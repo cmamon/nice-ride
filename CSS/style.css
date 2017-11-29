@@ -149,19 +149,26 @@ footer a {
 .button {
     -webkit-transition-duration: 0.2s; /* Safari */
     transition-duration: 0.2s;
-    background-color: rgba(255, 69, 0, 0.7);
+    background-color: white;
     color: black;
     padding: 14px 40px;
+    border : none;
     /*border: 2px solid #008CBA; /*#F3FAB6*/ */
-    border: 2px solid;
-    border-color: rgba(255, 69, 0, 0.9);
+    /*border: 2px solid;
+    border-color: rgba(255, 69, 0, 0.9);*/
+    cursor: pointer;
+}
+
+.buttonHome {
+    border: 2px solid #008CBA;
     border-radius: 2px;
+
 }
 
 .button:hover {
-    background-color: rgba(255, 69, 0, 0.8);
-    border-color: rgba(255, 69, 0, 0.3);
-    /*color : white;*/
+    background-color: #008CBA;
+    /*border-color: rgba(255, 69, 0, 0.3);*/
+    color : white;
 }
 
 .searchGroup {
@@ -244,5 +251,48 @@ label {
 }
 
 .loginForm button {
+    text-align: center;
+}
+
+/*search.php*/
+
+.sort {
+    text-align: center;
+}
+
+.trip {
+    width: 50%;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+}
+
+.tripTopLeft{
+    float : left;
+    width: 70%;
+    display: inline-block;
+}
+
+.tripTopRight{
+    float: right;
+    display: inline-block;
+}
+
+.tripPrice {
+    text-align: center;
+    font-size: 25px;
+    color: blue;
+}
+
+.vl {
+    position: relative;
+    top: 20px;
+    display: inline-block;
+    border-left: 4px solid #38546d;
+    height: 80px;
+    margin-left: 7px;
+    margin-right: 7px; 
+}
+
+.note {
     text-align: center;
 }
