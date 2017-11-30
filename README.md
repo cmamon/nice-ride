@@ -66,7 +66,8 @@ Le projet doit être réalisé :
 * avec PHP/MySQL _et optionnellement JavaScript (par exemple pour afficher sur une Google
 Map le trajet, pour améliorer les interfaces, pour faire du web responsive...) ;_
 * Des frameworks PHP ou JavaScript peuvent être utilisés ;
-* Le projet doit être hébergé sur un serveur GIT (de la FDS ou externe).
+Le projet doit être hébergé sur un serveur GIT (de la FDS ou externe).
+
 Le rendu de projet consistera :
 * A l’envoi par courriel aux enseignants responsables des UE concernées, une semaine avant la
 date de rendu (qui sera fixée ultérieurement mais sans doute planifiée en toute fin de
