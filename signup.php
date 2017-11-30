@@ -66,7 +66,7 @@
                     <input type="password" id="inputConfirmationPassword" placeholder="Saisissez à nouveau votre mot de passe" required>
 
                     <!-- <br> -->
-                    <br>
+                    <br><br>
                     <button type="submit" class="button" name="connexion">S'enregistrer</button>
                 </form>
             </div>
