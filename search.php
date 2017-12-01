@@ -43,12 +43,12 @@
                     </div>
                     <div class="vl"></div>
                     <div class="tripTopRight">
-                        <p>Publiée le (date) par (prenom du conducteur)</p>
+                        <p class="infosTrip">Publiée le (date) par (prenom du conducteur)</p>
                     </div>
                 </div>
                 <div class="note">
                     <hr width="80%">
-                </p>Connectez vous pour avoir les coordonées de (prenom du conducteur)</p>
+                    </p>Connectez vous pour avoir les coordonées de (prenom du conducteur)</p>
                 </div>
             </div>
         </div>

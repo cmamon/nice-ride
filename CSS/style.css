@@ -76,6 +76,7 @@ h2 {
 
 .part2 {
     float: right;
+    padding: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
 }
@@ -214,15 +215,14 @@ footer a {
 /* propose.php */
 
 #map {
-    width:400px;
-    height:400px;
+    width:500px;
+    height:500px;
 }
 
 /*login.php*/
 
 label {
     padding: 12px 12px 12px 0;
-    display: inline-block;
 }
 
 .main {
@@ -267,7 +267,9 @@ label {
 
 .trip {
     width: 50%;
-    border: 1px solid #bbb;
+    border-top: 2px solid #bbb;
+    border-left: 2px solid #bbb;
+    border-bottom: 2px solid #bbb;
     border-radius: 4px;
 }
 
@@ -288,9 +290,16 @@ label {
     color: blue;
 }
 
+p.infosTrip {
+    position : relative;
+    top: 10px;
+    width: 10em;
+    line-height: 1.8;
+}
+
 .vl {
     position: relative;
-    top: 20px;
+    top: 10px;
     display: inline-block;
     border-left: 4px solid #38546d;
     height: 80px;

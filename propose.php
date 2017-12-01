@@ -5,7 +5,6 @@
     <head>
         <?php require 'head.html'; ?>
         <title>Proposer un voyage</title>
-
     </head>
     <body>
         <header>
@@ -13,8 +12,8 @@
                 <nav>
                     <a id="brand" href="index.php">Nice Ride</a>
                     <ul>
-                        <li> <a href="login.php">CONNEXION</a> </li>
-                        <li> <a href="signup.php">S'INSCRIRE</a> </li>
+                        <li><a href="login.php">CONNEXION</a></li>
+                        <li><a href="signup.php">S'INSCRIRE</a></li>
                     </ul>
                 </nav>
             </div>
@@ -29,7 +28,17 @@
         ?>
         <div class="twoParts">
             <div class="part1">
-                <h3>Carte de Montpellier</h3>
+                <div class="searchGroup">
+                    <h3>Votre trajet :</h3>
+                    <br>
+                    <form method="post">
+                        <label for="departureCity">De</label>
+                        <input type="text" id="departureCity" class="cities" name="searchDepartureCity" placeholder="Ville de départ">
+                        <br>
+                        <label for="arrivalCity">À</label>
+                        <input type="text" id="arrivalCity" class="cities" name="searchArrivalCity" placeholder="Ville d'arrivée">
+                    </form>
+                </div>
             </div>
             <div class="part2">
                 <div id="map"></div>
@@ -44,32 +53,56 @@
         <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
         <script type="text/javascript">
 
-            var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            var labelIndex = 0;
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var labelIndex = 0;
 
-            function initMap(){
-                var coordMontpellier = {lat: 43.6111, lng: 3.87667};
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    center: coordMontpellier,
-                    zoom: 10
-                });
-                // var marker = new google.maps.Marker({
-                //     position: coordMontpellier,
-                //     map: map
-                // });
+        function addMarker(coords){
+            var marker = new google.maps.Marker({
+                position: coords,
+                animation: google.maps.Animation.DROP,
+                label: labels[labelIndex++ % labels.length],
+                map: map
+            });
+        }
 
-                addMarker(coordMontpellier);
+        function initMap(){
+            var directionsService = new google.maps.DirectionsService;
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var coordMontpellier = {lat: 43.6111, lng: 3.87667};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: coordMontpellier,
+                zoom: 10
+            });
 
-                function addMarker(coords){
-                    var marker = new google.maps.Marker({
-                        position: coords,
-                        animation: google.maps.Animation.DROP,
-                        label: labels[labelIndex++ % labels.length],
-                        map: map
-                    });
+            directionsDisplay.setMap(map);
+            var onChangeHandler = function() {
+                calculateAndDisplayRoute(directionsService, directionsDisplay);
+            };
+
+            addMarker(coordMontpellier);
+
+            document.getElementById('departureCity').addEventListener('change', onChangeHandler);
+            document.getElementById('arrivalCity').addEventListener('change', onChangeHandler);
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+            directionsService.route({
+                origin: document.getElementById('departureCity').value,
+                destination: document.getElementById('arrivalCity').value,
+                travelMode: 'DRIVING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
                 }
-            }
+            });
+        }
+
+
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVEJd3oceuJC5ivSIjaWvJomYNxc2JR_A&callback=initMap" async defer></script>
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVEJd3oceuJC5ivSIjaWvJomYNxc2JR_A&callback=initMap">
+        </script>
     </body>
 </html>
