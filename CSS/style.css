@@ -75,6 +75,7 @@ h2 {
 }
 
 .part2 {
+    background-color: blue;
     float: right;
     padding: 20px;
     margin-top: 20px;
@@ -265,29 +266,35 @@ label {
     text-align: center;
 }
 
+.searchResults {
+    padding: 30px;
+}
+
 .trip {
-    width: 50%;
-    border-top: 2px solid #bbb;
-    border-left: 2px solid #bbb;
-    border-bottom: 2px solid #bbb;
+    width: 30%;
+    border: 2px solid #008CBA;
+    /*border-left: 2px solid #008CBA;*/
+    /*border-bottom: 2px solid #008CBA;*/
+    border-style: inset;
     border-radius: 4px;
 }
 
 .tripTopLeft{
     float : left;
-    width: 70%;
+    width: 60%;
     display: inline-block;
+    font-weight: bold;
 }
 
 .tripTopRight{
-    float: right;
+    /*float: right;*/
     display: inline-block;
 }
 
 .tripPrice {
     text-align: center;
     font-size: 25px;
-    color: blue;
+    color: #008CBA;
 }
 
 p.infosTrip {
@@ -295,6 +302,10 @@ p.infosTrip {
     top: 10px;
     width: 10em;
     line-height: 1.8;
+}
+
+p.cities {
+    text-align: center;
 }
 
 .vl {

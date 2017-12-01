@@ -35,7 +35,7 @@
             <div class="trip">
                 <div class="tripTop">
                     <div class="tripTopLeft">
-                        Départ | Arrivée
+                        <p class="cities">Départ <span class="glyphicon glyphicon-arrow-right"></span> Arrivée</p>
                         <hr width="50%">
                         <div class="tripPrice">
                             Prix

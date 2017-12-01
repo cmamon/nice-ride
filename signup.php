@@ -68,11 +68,12 @@
                     <!-- <br> -->
                     <br><br>
                     <button type="submit" class="button" name="connexion">S'enregistrer</button>
+                    <br>
+                    <p>Vous possédez déjà un compte? <a href="login.php">Connectez vous</a> !</p>
                 </form>
             </div>
         </div>
 
-        <p>Vous possédez déjà un compte? <a href="login.php">Enregistrez vous</a> !</p>
 
         <footer>
             <?php require 'footer.html'; ?>
