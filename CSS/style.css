@@ -67,19 +67,20 @@ h2 {
 }
 
 .twoParts {
+    border-left: 4px solid #38546d;
     overflow: auto;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .part1 {
     float: left;
+    width: 40%;
 }
 
 .part2 {
-    background-color: blue;
     float: right;
-    padding: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 .panel {
@@ -220,6 +221,19 @@ footer a {
     height:500px;
 }
 
+.part1 .searchGroup {
+    position: relative;
+    top: 0px;
+    text-align: center;
+}
+
+.part1 .searchGroup input[type=text]{
+    padding: 12px 40px;
+    margin: 8px 0;
+    width: 60%;
+    /*box-sizing: */
+}
+
 /*login.php*/
 
 label {
@@ -271,7 +285,7 @@ label {
 }
 
 .trip {
-    width: 30%;
+    width: 40%;
     border: 2px solid #008CBA;
     /*border-left: 2px solid #008CBA;*/
     /*border-bottom: 2px solid #008CBA;*/
