@@ -180,6 +180,9 @@ footer a {
 }
 
 .searchGroup {
+    /*width: 70%;*/
+    overflow: auto;
+    background: rgba(234, 234, 237, 0.3);
     position: relative;
     top: 70px;
     text-align: center;
