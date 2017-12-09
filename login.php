@@ -1,4 +1,17 @@
-<?php session_start(); ?>
+<?php
+session_start();
+// if (!$logged_id)
+// {
+//     $_SESSION['redirect_url'] = $_SERVER['PHP_SELF'];
+//     header('Location: login.php');
+//     exit;
+// }
+//
+// $redirect_url = (isset($_SESSION['redirect_url'])) ? $_SESSION['redirect_url'] : '/';
+// unset($_SESSION['redirect_url']);
+// header("Location: $redirect_url", true. 303);
+// exit;
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,30 +22,31 @@
     <body>
                               <!-- HEADER -->
         <header>
-            <div class="defaultNav">
-                <nav>
-                    <a id="brand" href="index.php">Nice Ride</a>
-                    <ul>
-                        <li> <a href="login.php">CONNEXION</a> </li>
-                        <li> <a href="signup.php">S'INSCRIRE</a> </li>
-                    </ul>
-                </nav>
-            </div>
+            <?php require 'header.php'; ?>
         </header>
 
         <?php
-        if ($_POST['connexion']) {
-            if (isset($_POST['email'])) {
-                if (match_found_in_database()) {
-                    $_SESSION['loggedin'] = true;
-                    $_SESSION['username'] = $username;
+        $hash = ""; // hash est le mot de passe crypté écrit dans la base de donnée
+            if (isset($_POST['connexion'])) {
+                if (isset($_POST['email'])) {
+                    if (match_found_in_database()) {
+                        if (isset($_POST['password'])) {
+                            if (password_verify ($_POST['password'], $hash )) {
+                                $_SESSION['loggedin'] = true;
+                                $_SESSION['username'] = $username;
+                            } else {
+                                echo "L'email saisi est incorrect";
+                            }
+                        }
+                    } else {
+                        echo "L'email saisi ne correspond à aucun utilisateur";
+                    }
                 }
             }
-        }
 
-        if (isset($_POST['remerberMe'])) {
-
-        }
+            // if (isset($_POST['remerberMe'])) {
+            //
+            // }
         ?>
 
         <!-- MAIN CONTENT -->

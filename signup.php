@@ -10,35 +10,32 @@
     </head>
     <body>
         <header>
-            <div class="defaultNav">
-                <nav>
-                    <a id="brand" href="index.php">Nice Ride</a>
-                    <ul>
-                        <li> <a href="login.php">CONNEXION</a> </li>
-                        <li> <a href="signup.php">S'INSCRIRE</a> </li>
-                    </ul>
-                </nav>
-            </div>
+            <?php require 'header.php'; ?>
         </header>
 
         <?php
-        if ($_POST['connexion']) {
+        if (isset($_POST['connexion'])) {
             if (isset($_POST['email'])) {
                 $_POST['mail'] = htmlspecialchars($_POST['mail']);
-                if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['mail']))
+                if (filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)!= false)
                 // On vérifie grâce à une regex que l'adresse email est au bon format
                 {
                     // On teste si l'adresse n'est pas déjà dans la base de donnée
                     // si elle n'est pas dedans, on l'ajoute.
                     // sinon on dit à l'utilisateur que l'adresse est déja utilisée
                     // realisable par une analyse immédiate de l'adresse
-                }
-            }
-            if (isset($_POST['password'])) {
-                $securised = md5($_POST['password']);
-                //Associer le mdp à l'adresse si elle a pu être ajoutée
-                //Analyse immédiate de la saisie du mdp (respect du nombre min de caractères,
-                // des caractères saisissables ...)
+                    if (isset($_POST['password'])) {
+                        $securised = password_hash($_POST['password'], PASSWORD_ARGON2I);
+
+                        //Associer le mdp à l'adresse si elle a pu être ajoutée
+                        //Analyse immédiate de la saisie du mdp (respect du nombre min de caractères,
+                        // des caractères saisissables ...)
+
+                        //creer un modal?
+                    }
+                // } else {
+                //     adresse email invalide redemander la saisie
+                // }
             }
         }
         ?>
@@ -72,6 +69,14 @@
                     <p>Vous possédez déjà un compte? <a href="login.php">Connectez vous</a> !</p>
                 </form>
             </div>
+            <!-- <div id="myModal" class="modal">  Ou pas parce qu'il faut d'abord une validation des données par le server -->
+            <div class="modal-content">
+                <p>Votre inscription a bien été enregistrée.</p>
+                <p>Souhaitez vous proposer des trajets en tant que conducteur?</p>
+                <p><a href="registerCar.php">Oui</a><br>Il vous sera demandé d'indiquer les caractéristiques d'une voiture.</p>
+                <p><a href="#">Non</a><br>Vous pourrez toujours changer d'avis par la suite.</p>
+            </div>
+            <!-- </div> -->
         </div>
 
 
