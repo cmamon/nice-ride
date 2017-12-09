@@ -8,22 +8,22 @@
     </head>
     <body>
         <header>
-            <div class="defaultNav">
-                <nav>
-                    <a id="brand" href="index.php">Nice Ride</a>
-                    <ul>
-                        <li><a href="login.php">CONNEXION</a></li>
-                        <li><a href="signup.php">S'INSCRIRE</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <?php require 'header.php'; ?>
         </header>
 
         <?php
             // if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-            //     echo "Welcome to the member's area, " . $_SESSION['username'] . "!";
+                // if (pas de voiture enregistrée) {
+                //     echo "Vous n'avez pas encore enregistré de voiture";
+                //     echo "<form style=\"display: inline\" action=\"registerCar.php\" method=\"get\">";
+                //     echo "<button>Enregistrer un véhicule</button>";
+                //     echo "</form>";
+                // } else {
+
+                //     echo "Bienvenue , " . $_SESSION['username'] . "!";
+            // }
             // } else {
-            //     echo "Please log in first to see this page.";
+            //     echo "Enregistrez vous pour voir cette page.";
             // }
         ?>
         <div class="main">
@@ -36,10 +36,28 @@
                             <label for="departureCity">De</label>
                             <input type="text" id="departureCity" class="cities" name="searchDepartureCity" placeholder="Ville de départ">
                             <br>
+                            <label for="arrivalCity">Adresse de RDV</label>
+                            <input type="text" id="meetingAdress" class="cities" name="meetingAdress" placeholder="n°rue Intitulé">
+                            <br>
                             <label for="arrivalCity">À</label>
                             <input type="text" id="arrivalCity" class="cities" name="searchArrivalCity" placeholder="Ville d'arrivée">
+                            <br>
+                            <label for="arrivalCity">Adresse de dépose</label>
+                            <input type="text" id="dropAdress" class="cities" name="dropAdress" placeholder="n°rue Intitulé">
+                            <br>
+                            <label for="date">Le</label>
+                            <input type="date" id="date" name="tripDate" placeholder="Date">
+                            <br>
                         </form>
                     </div>
+                    <div id="output">
+
+                    </div>
+                    <h3>Renseignez le prix</h3>
+                    <p>Prix suggéré : floor((donner le prix d'un tel trajet avec google ) - 3% du prix)</p>
+                    <form class="" action="propose2.html" method="post">
+                        <input type="number" min="0" max ="80" name="" value="">
+                    </form>
                 </div>
                 <div class="part2">
                     <div id="map"></div>
@@ -55,18 +73,6 @@
         <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
         <script type="text/javascript">
 
-        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        var labelIndex = 0;
-
-        function addMarker(coords){
-            var marker = new google.maps.Marker({
-                position: coords,
-                animation: google.maps.Animation.DROP,
-                label: labels[labelIndex++ % labels.length],
-                map: map
-            });
-        }
-
         function initMap(){
             var directionsService = new google.maps.DirectionsService;
             var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -74,57 +80,132 @@
                 center: {lat: 46.227638, lng: 2.213749},
                 zoom: 5
             });
-            directionsDisplay.setMap(map);
 
-            var onChangeHandler = function() {
-                calculateAndDisplayRoute(directionsService, directionsDisplay);
-            };
+            new AutocompleteDirectionsHandler(map);
 
+          var bounds = new google.maps.LatLngBounds;
+          var markersArray = [];
 
-            document.getElementById('departureCity').addEventListener('change', onChangeHandler);
-            document.getElementById('arrivalCity').addEventListener('change', onChangeHandler);
-        }
+          var originInput = document.getElementById('departureCity').value;
 
-        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-            directionsService.route({
-                origin: document.getElementById('departureCity').value,
-                destination: document.getElementById('arrivalCity').value,
-                travelMode: 'DRIVING'
-            }, function(response, status) {
-                if (status === 'OK') {
-                    directionsDisplay.setDirections(response);
-                } else {
-                    window.alert('Directions request failed due to ' + status);
+          var destinationInput = document.getElementById('arrivalCity').value;
+
+          var geocoder = new google.maps.Geocoder;
+
+          var service = new google.maps.DistanceMatrixService;
+          service.getDistanceMatrix({
+            origins: [originInput],
+            destinations: [destinationInput],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false
+          }, function(response, status) {
+            if (status !== 'OK') {
+              alert('Error was: ' + status);
+            } else {
+              var originList = response.originAddresses;
+              console.log(originList);
+              var destinationList = response.destinationAddresses;
+              var outputDiv = document.getElementById('output');
+              outputDiv.innerHTML = '';
+            //   deleteMarkers(markersArray);
+
+              var showGeocodedAddressOnMap = function(asDestination) {
+                return function(results, status) {
+                  if (status === 'OK') {
+                    map.fitBounds(bounds.extend(results[0].geometry.location));
+                    markersArray.push(new google.maps.Marker({
+                      map: map,
+                      position: results[0].geometry.location,
+                    }));
+                  } else {
+                    alert('Geocode was not successful due to: ' + status);
+                  }
+                };
+              };
+
+              for (var i = 0; i < originList.length; i++) {
+                var results = response.rows[i].elements;
+                geocoder.geocode({'address': originList[i]},
+                    showGeocodedAddressOnMap(false));
+                for (var j = 0; j < results.length; j++) {
+                  geocoder.geocode({'address': destinationList[j]},
+                      showGeocodedAddressOnMap(true));
+                    //   console.log(results[j]);
+                  outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
+                      ': ' + results[j].distance.text + ' in ' +
+                      results[j].duration.text + '<br>';
                 }
-            });
+              }
+            }
+          });
         }
 
-        /* PLACE AUTOCCOMPLETE */
+       /**
+        * @constructor
+       */
+      function AutocompleteDirectionsHandler(map) {
+        this.map = map;
+        this.originPlaceId = null;
+        this.destinationPlaceId = null;
+        this.travelMode = 'DRIVING';
+        var originInput = document.getElementById('departureCity');
+        var destinationInput = document.getElementById('arrivalCity');
+        this.directionsService = new google.maps.DirectionsService;
+        this.directionsDisplay = new google.maps.DirectionsRenderer;
+        this.directionsDisplay.setMap(map);
 
-        var options = {
-            types: ['(cities)'],
-            componentRestrictions: {country: "fr"}
-        };
-        function activatePlacesSearch1(){
-            var input = document.getElementById('departureCity');
-            var autocomplete = new google.maps.places.Autocomplete(input, options);
-        }
-        function activatePlacesSearch2(){
-            var input = document.getElementById('arrivalCity');
-            var autocomplete = new google.maps.places.Autocomplete(input, options);
-        }
-        function searchPlaces() {
-            activatePlacesSearch1();
-            activatePlacesSearch2();
-        }
+        var originAutocomplete = new google.maps.places.Autocomplete(
+            originInput, {placeIdOnly: true});
+        var destinationAutocomplete = new google.maps.places.Autocomplete(
+            destinationInput, {placeIdOnly: true});
 
-        function setAll() {
-            searchPlaces();
-            initMap();
+        this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
+        this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+      }
+
+      AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
+        var me = this;
+        autocomplete.bindTo('bounds', this.map);
+        autocomplete.addListener('place_changed', function() {
+          var place = autocomplete.getPlace();
+          if (!place.place_id) {
+            window.alert("Please select an option from the dropdown list.");
+            return;
+          }
+          if (mode === 'ORIG') {
+            me.originPlaceId = place.place_id;
+          } else {
+            me.destinationPlaceId = place.place_id;
+          }
+          me.route();
+        });
+
+      };
+
+      AutocompleteDirectionsHandler.prototype.route = function() {
+        if (!this.originPlaceId || !this.destinationPlaceId) {
+          return;
         }
+        var me = this;
+
+        this.directionsService.route({
+          origin: {'placeId': this.originPlaceId},
+          destination: {'placeId': this.destinationPlaceId},
+          travelMode: this.travelMode
+        }, function(response, status) {
+          if (status === 'OK') {
+            me.directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      };
+
         </script>
         <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVEJd3oceuJC5ivSIjaWvJomYNxc2JR_A&libraries=places&callback=setAll">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVEJd3oceuJC5ivSIjaWvJomYNxc2JR_A&libraries=places&callback=initMap">
         </script>
         <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVEJd3oceuJC5ivSIjaWvJomYNxc2JR_A&libraries=places&callback=searchPlaces"></script> -->
     </body>
