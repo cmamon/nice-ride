@@ -7,15 +7,7 @@
     </head>
     <body>
         <header>
-            <div class="defaultNav">
-                <nav>
-                    <a id="brand" href="index.php">Nice Ride</a>
-                    <ul>
-                        <li> <a href="login.php">CONNEXION</a> </li>
-                        <li> <a href="signup.php">S'INSCRIRE</a> </li>
-                    </ul>
-                </nav>
-            </div>
+            <?php require 'header.php'; ?> 
         </header>
 
         <div class="sort">
