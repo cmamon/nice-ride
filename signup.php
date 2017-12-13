@@ -33,7 +33,8 @@
 
                         //creer un modal?
                     }
-                // } else {
+                }
+                // else {
                 //     adresse email invalide redemander la saisie
                 // }
             }
@@ -44,13 +45,13 @@
             <div class="loginForm">
                 <form class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <label for="inputLastName">Nom</label>
-                    <input type="text" id="inputLastName" placeholder="Saisissez votre nom de famille" required>
+                    <input type="text" id="inputLastName" name="lastname" placeholder="Saisissez votre nom de famille" required>
 
                     <label for="inputFirstName">Prénom</label>
-                    <input type="text" id="inputFirstName" placeholder="Saisissez votre prénom" required>
+                    <input type="text" id="inputFirstName" name="firstname" placeholder="Saisissez votre prénom" required>
 
                     <label for="inputPhoneNumber">Tel</label>
-                    <input type="tel" id="inputPhoneNumber" placeholder="Saisissez votre numéro de téléphone portable" required>
+                    <input type="tel" id="inputPhoneNumber" name="phone" placeholder="Saisissez votre numéro de téléphone portable" required>
 
                     <label for="inputEmail">Email</label>
                     <input type="email" id="inputEmail" name="email" placeholder="Email" required>
