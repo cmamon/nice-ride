@@ -26,24 +26,6 @@ session_start();
         </header>
 
         <?php
-        $hash = ""; // hash est le mot de passe crypté écrit dans la base de donnée
-            if (isset($_POST['connexion'])) {
-                if (isset($_POST['email'])) {
-                    if (match_found_in_database()) {
-                        if (isset($_POST['password'])) {
-                            if (password_verify ($_POST['password'], $hash )) {
-                                $_SESSION['loggedin'] = true;
-                                $_SESSION['username'] = $username;
-                            } else {
-                                echo "L'email saisi est incorrect";
-                            }
-                        }
-                    } else {
-                        echo "L'email saisi ne correspond à aucun utilisateur";
-                    }
-                }
-            }
-
             // if (isset($_POST['remerberMe'])) {
             //
             // }

@@ -46,7 +46,9 @@
                             <input type="text" id="dropAddress" class="cities" name="dropAdress" placeholder="n°rue Intitulé">
                             <br>
                             <label for="date">Le</label>
-                            <input type="date" id="date" name="tripDate" placeholder="Date">
+                            <div class="input-group date">
+                                <input type="date" id="date" name="tripDate" placeholder="Date">
+                            </div>
                             <br>
                         </form>
                     </div>
@@ -59,9 +61,9 @@
                         <input type="number" min="0" max ="80" name="" value="">
                     </form>
                 </div>
-                <div class="part2">
-                    <div id="map"></div>
-                </div>
+            </div>
+            <div class="part2">
+                <div id="map"></div>
             </div>
         </div>
 
