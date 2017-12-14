@@ -7,8 +7,12 @@
     </head>
     <body>
         <header>
-            <?php require 'header.php'; ?> 
+            <?php require 'header.php'; ?>
         </header>
+
+        <?php
+            require 'functions.php';
+        ?>
 
         <div class="sort">
             <form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
