@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.html'; ?>
+        <?php require 'head.php'; ?>
         <title>Proposer un voyage</title>
     </head>
     <body>
@@ -61,14 +61,14 @@
                         <input type="number" min="0" max ="80" name="" value="">
                     </form>
                 </div>
-            </div>
-            <div class="part2">
-                <div id="map"></div>
+                <div class="part2">
+                    <div id="map"></div>
+                </div>
             </div>
         </div>
 
         <footer>
-            <?php require 'footer.html'; ?>
+            <?php require 'footer.php'; ?>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

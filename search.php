@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.html'; ?>
+        <?php require 'head.php'; ?>
         <title></title>
     </head>
     <body>
@@ -50,7 +50,7 @@
         </div>
 
         <footer>
-            <?php require 'footer.html'; ?>
+            <?php require 'footer.php'; ?>
         </footer>
     </body>
 </html>

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <?php require 'head.html'; ?>
+    <?php require 'head.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Dashboard</title>
 </head>
@@ -59,7 +59,10 @@
 
     echo"<h3>Membre(s) dans le rouge</h3>";
 
-        members_below_limit_review($conn);
+        //On récupère la limite minimale pour la note d'un membre
+        $controls = simplexml_load_file("XML/controls.xml");
+        $minimalReview = (float)$controls->adminControls->minimalReview;
+        members_below_limit_review($conn, $minimalReview);
 
         echo "<p>Changer le seuil minimal pour la note</p>";
 
@@ -68,11 +71,8 @@
             echo "<input type=\"submit\" value=\"Modifier\">";
         echo "</form>";
 
-        //fix accessibility (rights) problems
-        $controls->adminControls->minimalReview = $controls->asXML('XML/controls.xml');
-
     echo "<footer>";
-        require 'footer.html';
+        require 'footer.php';
     echo"</footer>";
     ?>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>

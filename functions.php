@@ -52,41 +52,43 @@ function get_5_less_frequented_trips($conn)
     $lessFrequentedTrips = $selectLessFrequentedTrips->setFetchMode(PDO::FETCH_ASSOC);
 }
 
-function members_below_limit_review($conn)
+function members_below_limit_review($conn, $minimalReview)
 {
-    $controls = simplexml_load_file("XML/controls.xml");
-    $minimalReview = (float)$controls->adminControls->minimalReview;
 
     $selectLowReviewMembers = $conn->prepare("SELECT MEMBER.firstname, MEMBER.lastname, MEMBER.review FROM MEMBER WHERE review < ");
     $selectLowReviewMembers->execute();
     $lowReviewmembers = $selectLowReviewMembers->setFetchMode(PDO::FETCH_ASSOC);
 
-    for($review in lowReviewmembers) {
-        if ($review < $minimalReview) {
-            echo "<ul>";
-            echo "<li>";
-            echo "<div>";
-            echo "Nom Prénom";
-            $nbFullStars = floor($review);
-            $nbHalfStars = floor(($review-floor($review))/0.5);
-            $nbEmptyStars = 5 - ceil($review);
-            for ($i = 0; $i < $nbFullStars; $i++) {
-                echo "<span class=\"fa fa-star checked\"></span>";
+    if ($lowReviewmembers) {
+        for($review in $lowReviewmembers) {
+            if ($review < $minimalReview) {
+                echo "<ul>";
+                echo "<li>";
+                echo "<div>";
+                echo "Nom Prénom";
+                $nbFullStars = floor($review);
+                $nbHalfStars = floor(($review-floor($review))/0.5);
+                $nbEmptyStars = 5 - ceil($review);
+                for ($i = 0; $i < $nbFullStars; $i++) {
+                    echo "<span class=\"fa fa-star checked\"></span>";
+                }
+                for ($i = 0; $i < $nbHalfStars; $i++) {
+                    echo "<i class=\"fa fa-star-half-o\"></i>";
+                }
+                for ($i = 0; $i < $nbEmptyStars; $i++) {
+                    echo"<span class=\"fa fa-star-o\"></span>";
+                }
+                echo " (". $review .")";
+                echo "<a href=\"#\">Voir le profil</a>";
+                echo "</div>";
+                echo"</li>";
+                echo"</ul>";
+            } else {
+                echo "<p>Il n'y a aucun membre ayant une note moyenne en dessous de " . $minimalReview ."</p>";
             }
-            for ($i = 0; $i < $nbHalfStars; $i++) {
-                echo "<i class=\"fa fa-star-half-o\"></i>";
-            }
-            for ($i = 0; $i < $nbEmptyStars; $i++) {
-                echo"<span class=\"fa fa-star-o\"></span>";
-            }
-            echo " (". $review .")";
-            echo "<a href=\"#\">Voir le profil</a>";
-            echo "</div>";
-            echo"</li>";
-            echo"</ul>";
-        } else {
-            echo "<p>Il n'y a aucun membre ayant une note moyenne en dessous de " . $minimalReview ."</p>";
         }
+    } else {
+        echo "<p>Il n'y a aucun membre ayant une note moyenne en dessous de " . $minimalReview ."</p>";
     }
 }
 ?>

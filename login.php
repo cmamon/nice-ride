@@ -15,7 +15,7 @@ session_start();
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.html'; ?>
+        <?php require 'head.php'; ?>
         <title>Connexion</title>
 
     </head>
@@ -51,7 +51,7 @@ session_start();
         </div>
 
         <footer>
-            <?php require 'footer.html'; ?>
+            <?php require 'footer.php'; ?>
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

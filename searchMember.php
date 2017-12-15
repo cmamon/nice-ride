@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <?php require 'head.html'; ?>
+    <?php require 'head.php'; ?>
     <title>Nom Prenom</title> <!-- Au pire, faire une page générale
         où on pourra chercher le nom d'un membre dans la base de données-->
 
@@ -19,7 +19,7 @@
     <h3>Envoyer un email <small>pour prévenir de la radiation ou de l'exclusion temporaire</small></h3>
 
     <footer>
-        <?php require 'footer.html'; ?>
+        <?php require 'footer.php'; ?>
     </footer>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 </body>

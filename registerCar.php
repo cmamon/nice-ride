@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.html'; ?>
+        <?php require 'head.php'; ?>
         <link rel="stylesheet" href="CSS/jquery-ui.css">
         <title>Enregister une voiture</title>
 
@@ -28,14 +28,20 @@
                         </form>
                     </div>
                     <div class="part2">
+                        <h4>Immatriculation</h4>
+                        <input type="text" name="" value="" placeholder="Numéro d'immatriculation">
+                        <br>
+                        <br>
                         <h4>Importez une image de votre voiture</h4>
-                        
+                         <input type="file" name="carImg">
+                         <br>
+                         <input type="submit">
                     </div>
                 </div>
             </div>
 
         <footer>
-            <?php require 'footer.html'; ?>
+            <?php require 'footer.php'; ?>
         </footer>
 
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
