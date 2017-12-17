@@ -1,5 +1,8 @@
-<?php session_start(); ?>
-
+<?php require 'functions.php';
+    if (!is_logged_in() || !is_admin()) {
+        redirect('index.html', 303);
+    }
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,7 +25,6 @@
     </header>
 
     <?php
-    require 'functions.php';
 
     $conn = connect_to_db();
 
