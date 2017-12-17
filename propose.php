@@ -1,5 +1,12 @@
-<?php session_start(); ?>
+<?php require 'functions.php';
 
+if(!is_logged_in()){
+    redirect('login.php', 303);
+    if (!has_a_vehicle()) {
+        redirect('registerCar.php', 303);
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -8,23 +15,10 @@
     </head>
     <body>
         <header>
-            <?php require 'header.php'; ?>
+            <?php set_header(); ?>
         </header>
 
         <?php
-            // if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-                // if (pas de voiture enregistrée) {
-                //     echo "Vous n'avez pas encore enregistré de voiture";
-                //     echo "<form style=\"display: inline\" action=\"registerCar.php\" method=\"get\">";
-                //     echo "<button>Enregistrer un véhicule</button>";
-                //     echo "</form>";
-                // } else {
-
-                //     echo "Bienvenue , " . $_SESSION['username'] . "!";
-            // }
-            // } else {
-            //     echo "Enregistrez vous pour voir cette page.";
-            // }
         ?>
         <div class="main">
             <div class="twoParts">

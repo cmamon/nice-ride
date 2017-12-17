@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 function connect_to_db()
 {
     $servername = "prodpeda-venus";
@@ -8,32 +10,85 @@ function connect_to_db()
     try {
         $conn = new PDO("mysql:host=$servername;dbname=cquenette;charset=utf8;", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully";
+        // echo "Connexion réussie";
 
     } catch (Exception $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "Connection échouée: " . $e->getMessage();
     }
     return $conn;
 }
 
-function login_check()
+function redirect($url, $statusCode = 303)
 {
-    $hash = ""; // hash est le mot de passe crypté écrit dans la base de donnée
+   header('Location: ' . $url, true, $statusCode);
+   die();
+}
+
+function login($conn)
+{
+    if ($email = login_check($conn) !== '') {
+        //On récupère le prénom
+        $selectFirstName = $conn->prepare("SELECT USER.firstname FROM USER WHERE USER.email = :email");
+        $selectFirstName->bindParam(':email', $email);
+        $selectFirstName->execute();
+        $row = $selectFirstName->fetchAll(PDO::FETCH_OBJ);
+        $firstname = $row[0]->firstname;
+
+        $_SESSION['loggedin'] = true;
+        $_SESSION['email'] = $email;
+        $_SESSION['username'] = $firstname;
+        $_SESSION['userLevel'] = 'member';
+    }
+}
+
+function login_check($conn)
+{
+    $errors = "";
+    $email = '';
     if (isset($_POST['connexion'])) {
         if (isset($_POST['email'])) {
-            if (match_found_in_database()) {
+            $email = $_POST['email'];
+            $selectUser = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
+            $selectUser->bindParam(':email', $email);
+            $selectUser->execute();
+            $user = $selectUser->fetchAll(PDO::FETCH_OBJ);
+            if ($user[0]->email == $email) {
                 if (isset($_POST['password'])) {
-                    if (password_verify ($_POST['password'], $hash )) {
-                        $_SESSION['loggedin'] = true;
-                        $_SESSION['username'] = $username;
+                    $password = $_POST['password'];
+                    $hash = $user[0]->password;
+                    if (password_verify($password, $hash)) {
+                        return $email;
                     } else {
-                        echo "L'email saisi est incorrect";
+                        $errors .= "Le mot de passe saisi est incorrect. ";
                     }
                 }
             } else {
-                echo "L'email saisi ne correspond à aucun utilisateur";
+                $errors .= "L'email saisi ne correspond à aucun utilisateur";
             }
         }
+    }
+    print($email);
+    echo $errors;
+}
+
+function is_logged_in()
+{
+    return isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
+}
+
+function log_out()
+{
+    $_SESSION['loggedin'] = false;
+    $_SESSION['email'] = '';
+    $_SESSION['username'] = '';
+}
+
+function cant_access_page()
+{
+    if (!is_logged_in()) {
+        echo "Connectez vous pour voir cette page.";
+    } else {
+        echo "La page que vous demandez est inaccessible.";
     }
 }
 
@@ -86,32 +141,79 @@ function insert_trip_in_db($conn)
                AND arrivalCity = :arrivalCity
                AND date = :date ");
     }
+
+function set_header()
+{
+    if (is_logged_in()) {
+        if($_SESSION['userLevel'] == 'member') {
+            require_once('headerMember.php');
+        } elseif ($_SESSION['userLevel'] == 'admin') {
+            require_once('headerAdmin.php');
+        }
+    } else {
+        require_once('header.php');
+    }
+}
+
+function set_header_home_page()
+{
+    if (is_logged_in()) {
+        if($_SESSION['userLevel'] == 'member') {
+            require_once('headerHomePageMember.php');
+        } elseif ($_SESSION['userLevel'] == 'admin') {
+            require_once('headerHomePageAdmin.php');
+        }
+    } else {
+        require_once('headerHomePage.php');
+    }
+}
+
+function is_admin()
+{
+    return false;
+}
+
+function print_username()
+{
+    echo "Bienvenue , " . $_SESSION['username'] . "!";
+}
+
+function has_a_car($conn)
+{
+    return true;
+    // $selectCar = $conn->prepare("SELECT * FROM CAR, USER WHERE memberID = onwer");
+    // $selectCar->bindParam(':minimalReview', $minimalReview);
+    // $selectCar->execute();
+    // $car = $selectCar->setFetchMode(PDO::FETCH_ASSOC);
+    // if () {
+    //
+    // }
 }
 
 
 function get_5_more_frequented_trips($conn)
 {
-    $selectMostFrequentedTrips = $conn->prepare("SELECT ROUTE.departureCity, ROUTE.arrivalCity FROM TRIP, ROUTE WHERE ");
+    $selectMostFrequentedTrips = $conn->prepare("SELECT ROUTE.departureCity, ROUTE.arrivalCity FROM TRIP, ROUTE WHERE TRIP.routeID = ROUTE.routeID");
     $selectMostFrequentedTrips->execute();
     $mostFrequentedTrips = $selectMostFrequentedTrips->fetchAll(PDO::FETCH_OBJ);
 }
 
 function get_5_less_frequented_trips($conn)
 {
-    $selectLessFrequentedTrips = $conn->prepare("SELECT ROUTE.departureCity, ROUTE.arrivalCity FROM TRIP, ROUTE");
+    $selectLessFrequentedTrips = $conn->prepare("SELECT ROUTE.departureCity, ROUTE.arrivalCity FROM TRIP, ROUTE WHERE TRIP.routeID = ROUTE.routeID");
     $selectLessFrequentedTrips->execute();
     $lessFrequentedTrips = $selectLessFrequentedTrips->fetchAll(PDO::FETCH_OBJ);
 }
 
 function members_below_limit_review($conn, $minimalReview)
 {
-
-    $selectLowReviewMembers = $conn->prepare("SELECT MEMBER.firstname, MEMBER.lastname, MEMBER.review FROM MEMBER WHERE review < ");
+    $selectLowReviewMembers = $conn->prepare("SELECT * FROM MEMBER WHERE review < :minimalReview");
+    $selectLowReviewMembers->bindParam(':minimalReview', $minimalReview);
     $selectLowReviewMembers->execute();
     $lowReviewmembers = $selectLowReviewMembers->fetchAll(PDO::FETCH_OBJ);
 
     if ($lowReviewmembers) {
-        for($review in $lowReviewmembers) {
+        foreach ($lowReviewmembers as $review) {
             if ($review < $minimalReview) {
                 echo "<ul>";
                 echo "<li>";
