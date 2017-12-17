@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php require 'functions.php'; ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,10 +9,6 @@
         <header>
             <?php require 'header.php'; ?>
         </header>
-
-        <?php
-            require 'functions.php';
-        ?>
 
         <div class="sort">
             <form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">

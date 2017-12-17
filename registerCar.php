@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php require 'functions.php'; ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,14 +28,16 @@
                         </form>
                     </div>
                     <div class="part2">
-                        <h4>Immatriculation</h4>
-                        <input type="text" name="" value="" placeholder="Numéro d'immatriculation">
-                        <br>
-                        <br>
-                        <h4>Importez une image de votre voiture</h4>
-                         <input type="file" name="carImg">
-                         <br>
-                         <input type="submit">
+                        <form class="" action="index.html" method="post">
+                            <h4>Immatriculation</h4>
+                            <input type="text" name="" value="" placeholder="Numéro d'immatriculation">
+                            <br>
+                            <br>
+                            <h4>Importez une image de votre voiture</h4>
+                            <input type="file" name="carImg">
+                            <br>
+                            <input type="submit">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -58,22 +60,6 @@
                 $('#yearselect').append(input);
             }
         });
-
-        // $('#yearselect').yearselect({
-        //     start: 1985,
-        //     step:5,
-        //     end: 2017,
-        //     order: 'asc',
-        //     selected: 2017,
-        //     formatDisplay: function(yr) { return yr },
-        //     displayAsValue: true
-        // });
-
-        // $("#yearpicker").datepicker( {
-        //     format: "yyyy", // Notice the Extra space at the beginning
-        //     viewMode: "years",
-        //     minViewMode: "years"
-        // });
         </script>
     </body>
 </html>
