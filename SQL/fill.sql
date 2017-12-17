@@ -6,7 +6,7 @@ DELETE FROM USER;
 
 
 -- INSERT VALUES IN USER
-INSERT INTO USER VALUES (1, 'Christophe', 'QUENETTE', 'christophe.quenette@etu.umontpellier.fr');
+INSERT INTO USER VALUES (1, 'Christophe', 'QUENETTE', 'christophe.quenette@etu.umontpellier.fr', '$2y$10$ai0LCMpEFzl4EJqyjaTRAuk1KTe41x8g.OGoNErAo5qhn/UArE7f6');
 -- INSERT INTO USER VALUES (2, '')
 
 -- INSERT VALUES IN MEMBER
