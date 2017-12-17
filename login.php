@@ -1,16 +1,17 @@
 <?php
-session_start();
-// if (!$logged_id)
-// {
-//     $_SESSION['redirect_url'] = $_SERVER['PHP_SELF'];
-//     header('Location: login.php');
-//     exit;
-// }
-//
-// $redirect_url = (isset($_SESSION['redirect_url'])) ? $_SESSION['redirect_url'] : '/';
-// unset($_SESSION['redirect_url']);
-// header("Location: $redirect_url", true. 303);
-// exit;
+
+require 'functions.php';
+$conn = connect_to_db();
+
+if (is_logged_in()) {
+    redirect('index.php', 303);
+}
+
+login($conn);
+
+if (is_admin()) {
+    $_SESSION['userLevel'] = 'admin';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,21 +21,13 @@ session_start();
 
     </head>
     <body>
-                              <!-- HEADER -->
         <header>
             <?php require 'header.php'; ?>
         </header>
 
-        <?php
-            // if (isset($_POST['remerberMe'])) {
-            //
-            // }
-        ?>
-
-        <!-- MAIN CONTENT -->
         <div class="main">
             <div class="loginForm">
-                <form class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form class="" method="post" action="">
                     <label for="inputEmail">Email</label>
                     <input type="email" id="inputEmail" name="email" placeholder="Email" required>
                     <!-- <br> -->
@@ -47,6 +40,8 @@ session_start();
                     <br>
                     <button type="submit" class="button" name="connexion">Connexion</button>
                 </form>
+                <br>
+                <p>Vous ne possédez par encore de compte? <a href="signup.php">Inscrivez vous</a>.</p>
             </div>
         </div>
 
