@@ -37,19 +37,70 @@ function login_check()
     }
 }
 
+function get_trips_matching_with_search($conn)
+{
+    if (isset($_POST['searchButton'])) {
+        if (isset($_POST['searchDepartureCity'])) {
+            $departureCity = $_POST['searchDepartureCity'];
+            if (isset($_POST['searchArrivalCity'])) {
+                $arrivalCity = $_POST['searchArrivalCity']
+                if (isset($_POST['date'])) {
+                    $date = $_POST['date'];
+                    $selectTripsMatching = $conn->prepare(
+                        "SELECT * FROM TRIP, ROUTE
+                         WHERE TRIP.routeID = ROUTE.routeID
+                           AND departureCity = :departureCity
+                           AND arrivalCity = :arrivalCity
+                           AND date = :date ");
+                    $selectTripsMatching->bindParam(':departureCity', $departureCity);
+                    $selectTripsMatching->bindParam(':arrivalCity', $arrivalCity);
+                    $selectTripsMatching->bindParam(':date', $date);
+                    $selectTripsMatching->execute();
+                    $tripsMatching = $selectTripsMatching->fetchAll(PDO::FETCH_OBJ);
+                }
+            }
+        }
+    }
+    return $tripsMatching;
+}
+
+function print_no_results($queryResults)
+{
+    if ($queryResults == NULL) {
+        echo "Aucun trajet ne correspond à votre demande";
+    }
+}
+
+function check_input_trip()
+{
+    return true;
+}
+
+function insert_trip_in_db($conn)
+{
+    if (check_input_trip()) {
+        $insertTripInDB = $conn->prepare(
+            "INSERT INTO TRIP ()
+             WHERE TRIP.routeID = ROUTE.routeID
+               AND departureCity = :departureCity
+               AND arrivalCity = :arrivalCity
+               AND date = :date ");
+    }
+}
+
+
 function get_5_more_frequented_trips($conn)
 {
     $selectMostFrequentedTrips = $conn->prepare("SELECT ROUTE.departureCity, ROUTE.arrivalCity FROM TRIP, ROUTE WHERE ");
     $selectMostFrequentedTrips->execute();
-    // set the resulting array to associative
-    $mostFrequentedTrips = $selectMostFrequentedTrips->setFetchMode(PDO::FETCH_ASSOC);
+    $mostFrequentedTrips = $selectMostFrequentedTrips->fetchAll(PDO::FETCH_OBJ);
 }
 
 function get_5_less_frequented_trips($conn)
 {
     $selectLessFrequentedTrips = $conn->prepare("SELECT ROUTE.departureCity, ROUTE.arrivalCity FROM TRIP, ROUTE");
     $selectLessFrequentedTrips->execute();
-    $lessFrequentedTrips = $selectLessFrequentedTrips->setFetchMode(PDO::FETCH_ASSOC);
+    $lessFrequentedTrips = $selectLessFrequentedTrips->fetchAll(PDO::FETCH_OBJ);
 }
 
 function members_below_limit_review($conn, $minimalReview)
@@ -57,7 +108,7 @@ function members_below_limit_review($conn, $minimalReview)
 
     $selectLowReviewMembers = $conn->prepare("SELECT MEMBER.firstname, MEMBER.lastname, MEMBER.review FROM MEMBER WHERE review < ");
     $selectLowReviewMembers->execute();
-    $lowReviewmembers = $selectLowReviewMembers->setFetchMode(PDO::FETCH_ASSOC);
+    $lowReviewmembers = $selectLowReviewMembers->fetchAll(PDO::FETCH_OBJ);
 
     if ($lowReviewmembers) {
         for($review in $lowReviewmembers) {
