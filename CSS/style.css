@@ -1,3 +1,13 @@
+@font-face {
+   font-family: 'hominis';
+   src: url('hominis.tff');
+}
+
+@font-face {
+   font-family: 'justHoldFashion';
+   src: url('jof.tff') format('truetype');
+}
+
 * {
     box-sizing: border-box;
 }
@@ -52,6 +62,7 @@ nav a, footer a{
 }
 
 #brand {
+    font-family: 'hominis';
     position: relative;
     left : 150px;
     top : 22px;
