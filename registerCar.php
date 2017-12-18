@@ -13,7 +13,7 @@
         </header>
 
         <div class="main">
-                <div class="carSpecs twoParts">
+                <div class="emphasized twoParts">
                     <h3>Caractéristiques de la voiture</h3>
                     <div class="part1">
                         <form class="" action="index.html" method="post">
