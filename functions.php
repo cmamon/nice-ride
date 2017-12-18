@@ -80,7 +80,13 @@ function insert_new_user($conn, $firstname, $lastname, $email, $password)
 
 function login($conn)
 {
-    if ($email = login_check($conn) !== '') {
+    $_SESSION['loggedin'] = false;
+    $_SESSION['email'] = "";
+    $_SESSION['username'] = "";
+    $_SESSION['userLevel'] = "guest";
+
+    $email = login_check($conn);
+    if ($email !== '') {
         //On récupère le prénom
         $selectFirstName = $conn->prepare("SELECT USER.firstname FROM USER WHERE USER.email = :email");
         $selectFirstName->bindParam(':email', $email);
@@ -100,46 +106,34 @@ function login_check($conn)
     $wrongEmail = $wrongPassword = "";
     $emailErr = $passwordError = $genderErr = ""; //genre inutile ici
     $email = $password = "";
-    if (isset($_POST['connexion'])) {
-        if (isset($_POST['email'])) {
-            $email = format($_POST['email']);
-            $selectUser = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
-            $selectUser->bindParam(':email', $email);
-            $selectUser->execute();
-            $user = $selectUser->fetchAll(PDO::FETCH_OBJ);
-            if ($user[0]->email == $email) {
-                if (isset($_POST['password'])) {
-                    $password = $_POST['password'];
-                    $hash = $user[0]->password;
-                    if (password_verify($password, $hash)) {
-                        return $email;
-                    } else {
-                        $wrongPassword = "Le mot de passe saisi est incorrect. ";
-                    }
+    if (isset($_POST['email'])) {
+        $email = format($_POST['email']);
+        $selectUser = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
+        $selectUser->bindParam(':email', $email);
+        $selectUser->execute();
+        $user = $selectUser->fetchAll(PDO::FETCH_OBJ);
+        if (!empty($user[0]->email)) {
+            if (isset($_POST['password'])) {
+                $password = $_POST['password'];
+                $hash = $user[0]->password;
+                if (password_verify($password, $hash)) {
+                    return $email;
                 } else {
-
+                    $wrongPassword = "Le mot de passe saisi est incorrect. ";
                 }
-            } else {
-                $wrongEmail = "L'email saisi ne correspond à aucun utilisateur";
             }
+        } else {
+            $wrongEmail = "L'email saisi ne correspond à aucun utilisateur";
         }
-    } else {
-        $emailErr = "L'email est requis";
     }
-    print($email);
-    echo $errors;
+    echo $wrongEmail;
+    echo $wrongPassword;
+    return "";
 }
 
 function is_logged_in()
 {
-    return isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
-}
-
-function log_out()
-{
-    $_SESSION['loggedin'] = false;
-    $_SESSION['email'] = '';
-    $_SESSION['username'] = '';
+    return (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true);
 }
 
 function cant_access_page()
@@ -153,29 +147,65 @@ function cant_access_page()
 
 function get_trips_matching_with_search($conn)
 {
-    if (isset($_POST['searchButton'])) {
-        if (isset($_POST['searchDepartureCity'])) {
-            $departureCity = $_POST['searchDepartureCity'];
-            if (isset($_POST['searchArrivalCity'])) {
-                $arrivalCity = $_POST['searchArrivalCity'];
-                if (isset($_POST['date'])) {
-                    $date = $_POST['date'];
-                    $selectTripsMatching = $conn->prepare(
-                        "SELECT * FROM TRIP, ROUTE
-                         WHERE TRIP.routeID = ROUTE.routeID
-                           AND departureCity = :departureCity
-                           AND arrivalCity = :arrivalCity
-                           AND date = :date ");
-                    $selectTripsMatching->bindParam(':departureCity', $departureCity);
-                    $selectTripsMatching->bindParam(':arrivalCity', $arrivalCity);
-                    $selectTripsMatching->bindParam(':date', $date);
-                    $selectTripsMatching->execute();
-                    $tripsMatching = $selectTripsMatching->fetchAll(PDO::FETCH_OBJ);
-                }
+    if (isset($_POST['searchDepartureCity'])) {
+        $departureCity = $_POST['searchDepartureCity'];
+        if (isset($_POST['searchArrivalCity'])) {
+            $arrivalCity = $_POST['searchArrivalCity'];
+            if (isset($_POST['date'])) {
+                $date = $_POST['date'];
+                $selectTripsMatching = $conn->prepare(
+                    "SELECT * FROM TRIP
+                     WHERE departureCity = :departureCity
+                       AND arrivalCity = :arrivalCity
+                       AND tripDate = :date ");
+                $selectTripsMatching->bindParam(':departureCity', $departureCity);
+                $selectTripsMatching->bindParam(':arrivalCity', $arrivalCity);
+                $selectTripsMatching->bindParam(':tripDate', $date);
+                $selectTripsMatching->execute();
+                $tripsMatching = $selectTripsMatching->fetchAll(PDO::FETCH_OBJ);
             }
         }
     }
     return $tripsMatching;
+}
+
+function print_trip($conn)
+{
+    $trips = get_trips_matching_with_search($conn);
+
+    if (!empty($trip)) {
+        foreach ($trips as $trip) {
+            echo "<div class=\"trip\">";
+                echo "<div class=\"tripTop\">";
+                    echo "<div class=\"note\">";
+                        echo "<p class=\"infosTrip\">Publiée le (date) par (prenom du conducteur)</p>";
+                    echo "</div>";
+                    echo "<div class=\"tripTopLeft\">";
+                        echo "<p class=\"cities\">Départ <span class=\"glyphicon glyphicon-arrow-right\"></span> Arrivée</p>";
+                        echo "<hr width=\"50%\">";
+                        echo "<div class=\"tripPrice\">";
+                            echo $trip->price . " euros.";
+                        echo "</div>";
+                    echo "</div>";
+                echo "</div>";
+                echo "<div class=\"vl\"></div>";
+                echo "<div class=\"tripTopRight\">";
+                if (!is_logged_in()) {
+                    echo "</p>Connectez vous pour réserver et avoir les coordonées de (prenom du conducteur)</p>";
+                } else {
+                    echo "<div>";
+                        echo "<p>(prenom du conducteur) [dropdown] avec son nuéro de téléphone</p>";
+                        echo "<br>";
+                        echo "<a href=\"book.php\">Réserver</a>";
+                    echo "</div>";
+                }
+                echo "</div>";
+            echo "</div>";
+            echo "<hr id=\"tripLimitation\">";
+        }
+    } else {
+        echo "<p>Aucun voyage ne correspond à votre recherche.<br><a href=\"search.php\">Rechercher un autre trajet</a></p>";
+    }
 }
 
 function print_no_results($queryResults)
@@ -204,11 +234,10 @@ function trip_in_db($conn)
 
 function insert_trip($conn, $departureCity, $arrivalCity, $date)
 {
-
     if (check_input_trip()) {
         if (!trip_in_db()) {
             $insertTrip = $conn->prepare(
-                "INSERT INTO TRIP ()
+                "INSERT INTO CAR ()
                 WHERE TRIP.routeID = ROUTE.routeID
                 AND departureCity = :departureCity
                 AND arrivalCity = :arrivalCity
@@ -278,6 +307,23 @@ function get_5_less_frequented_trips($conn)
     $lessFrequentedTrips = $selectLessFrequentedTrips->fetchAll(PDO::FETCH_OBJ);
 }
 
+function print_star_rating($review)
+{
+    $nbFullStars = floor($review);
+    $nbHalfStars = floor(($review-floor($review))/0.5);
+    $nbEmptyStars = 5 - ceil($review);
+    for ($i = 0; $i < $nbFullStars; $i++) {
+        echo "<span class=\"fa fa-star checked\"></span>";
+    }
+    for ($i = 0; $i < $nbHalfStars; $i++) {
+        echo "<i class=\"fa fa-star-half-o\"></i>";
+    }
+    for ($i = 0; $i < $nbEmptyStars; $i++) {
+        echo"<span class=\"fa fa-star-o\"></span>";
+    }
+    echo " (". $review .")";
+}
+
 function members_below_limit_review($conn, $minimalReview)
 {
     $selectLowReviewMembers = $conn->prepare("SELECT * FROM MEMBER WHERE review < :minimalReview");
@@ -292,19 +338,7 @@ function members_below_limit_review($conn, $minimalReview)
                 echo "<li>";
                 echo "<div>";
                 echo "Nom Prénom";
-                $nbFullStars = floor($review);
-                $nbHalfStars = floor(($review-floor($review))/0.5);
-                $nbEmptyStars = 5 - ceil($review);
-                for ($i = 0; $i < $nbFullStars; $i++) {
-                    echo "<span class=\"fa fa-star checked\"></span>";
-                }
-                for ($i = 0; $i < $nbHalfStars; $i++) {
-                    echo "<i class=\"fa fa-star-half-o\"></i>";
-                }
-                for ($i = 0; $i < $nbEmptyStars; $i++) {
-                    echo"<span class=\"fa fa-star-o\"></span>";
-                }
-                echo " (". $review .")";
+                print_star_rating($review);
                 echo "<a href=\"#\">Voir le profil</a>";
                 echo "</div>";
                 echo"</li>";
@@ -318,37 +352,14 @@ function members_below_limit_review($conn, $minimalReview)
     }
 }
 
-function print_trip($conn)
+
+function get_member($conn)
 {
-    $trips = get_trips_matching_with_search($conn);
-
-    if (!empty($trip)) {
-        foreach ($trips as $trip) {
-
-            $get_
-
-            echo "<div class=\"trip\">";
-                echo "<div class=\"tripTop\">";
-                    echo "<div class=\"note\">";
-                        echo "<p class=\"infosTrip\">Publiée le (date) par (prenom du conducteur)</p>";
-                    echo "</div>";
-            <div class="tripTopLeft">
-            <p class="cities">Départ <span class="glyphicon glyphicon-arrow-right"></span> Arrivée</p>
-            <hr width="50%">
-            <div class="tripPrice">
-            Prix
-            </div>
-            </p>Connectez vous pour réserver et avoir les coordonées de (prenom du conducteur)</p>
-            </div>
-            <div class="vl"></div>
-            <div class="tripTopRight">
-            </div>
-            </div>
-            <hr width="80%">
-            </div>
-        }
-    } else {
-        echo "<p>Aucun voyage ne correspond à votre recherche.<br><a href=\"search.php\">Rechercher un autre trajet</a></p>";
-    }
+    $email = format($_SESSION['email']);
+    $selectMember = $conn->prepare("SELECT * FROM USER, MEMBER WHERE email = :email");
+    $selectMember->bindParam(':email', $email);
+    $selectMember->execute();
+    $member = $selectMember->fetchAll(PDO::FETCH_OBJ);
+    return $member[0];
 }
 ?>

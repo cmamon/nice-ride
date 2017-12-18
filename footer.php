@@ -1,7 +1,7 @@
 <div class="footer">
     <div id="bottomLinks">
         <a href="contact.html">Me contacter</a>
-        <a href="help.html">Aide</a>
+        <a href="help.php">Aide</a>
         <a href="faq.html">F.A.Q</a>
     </div>
     <div id="copyright">

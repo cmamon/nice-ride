@@ -1,4 +1,6 @@
-<?php session_start(); ?>
+<?php require 'functions.php';
+$conn = connect_to_db();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +16,7 @@
         </header>
 
         <?php
-            
+
         ?>
 
         <div class="main">
@@ -42,7 +44,7 @@
                     <!-- <br> -->
                     <br><br>
                     <button type="submit" class="button" name="connexion">S'enregistrer</button>
-                    <br>
+                    <br><br>
                     <p>Vous possédez déjà un compte? <a href="login.php">Connectez vous</a> !</p>
                 </form>
             </div>
@@ -63,5 +65,13 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+        <script>
+        String.prototype.capitalize = function() {
+            return this.charAt(0).toUpperCase() + this.slice(1);
+        }
+
+        getElementById('inputLastName').value.capitalize();
+
+        </script>
     </body>
 </html>
