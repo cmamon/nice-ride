@@ -1,22 +1,24 @@
+DELETE FROM TRAVEL;
 DELETE FROM TRIP;
-DELETE FROM ROUTE;
 DELETE FROM CAR;
 DELETE FROM MEMBER;
+DELETE FROM ADMIN;
 DELETE FROM USER;
 
 
 -- INSERT VALUES IN USER
-INSERT INTO USER VALUES (1, 'Christophe', 'QUENETTE', 'christophe.quenette@etu.umontpellier.fr', '$2y$10$ai0LCMpEFzl4EJqyjaTRAuk1KTe41x8g.OGoNErAo5qhn/UArE7f6');
+INSERT INTO USER VALUES (1, 'Christophe', 'QUENETTE', 'christophe.quenette@etu.umontpellier.fr',
+     '$2y$10$ai0LCMpEFzl4EJqyjaTRAuk1KTe41x8g.OGoNErAo5qhn/UArE7f6', 75, 'Avenue',  'Augustin Fliche', 'Montpellier', '+33750867489');
 -- INSERT INTO USER VALUES (2, '')
 
 -- INSERT VALUES IN MEMBER
-INSERT INTO MEMBER VALUES (1, 75, 'Avenue',  'Augustin Fliche', 'Montpellier', '+33750867489', 5.6); -- Test de note trop élévée
+INSERT INTO MEMBER (memberID, review) VALUES (1, 5.6); -- Test de note trop élévée
 
 -- INSERT VALUES IN CAR
 INSERT INTO CAR VALUES (1, 'AA-123-AA', 1, 'Kangoo', 'Renault', 2009, 5);
 
 -- INSERT VALUES IN ROUTE
-INSERT INTO ROUTE VALUES (1, 'Lille', 'Montpellier');
+INSERT INTO TRIP VALUES (1, 'Lille', 'Montpellier', 45);
 
 -- INSERT VALUES IN TRIP
-INSERT INTO TRIP VALUES (1, 1, "2017-12-13");
+INSERT INTO TRAVEL VALUES (1, 1, "2017-12-13");
