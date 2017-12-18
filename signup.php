@@ -14,36 +14,12 @@
         </header>
 
         <?php
-        if (isset($_POST['connexion'])) {
-            if (isset($_POST['email'])) {
-                $_POST['mail'] = htmlspecialchars($_POST['mail']);
-                if (filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)!= false)
-                // On vérifie grâce à une regex que l'adresse email est au bon format
-                {
-                    // On teste si l'adresse n'est pas déjà dans la base de donnée
-                    // si elle n'est pas dedans, on l'ajoute.
-                    // sinon on dit à l'utilisateur que l'adresse est déja utilisée
-                    // realisable par une analyse immédiate de l'adresse
-                    if (isset($_POST['password'])) {
-                        $securised = password_hash($_POST['password'], PASSWORD_ARGON2I);
-
-                        //Associer le mdp à l'adresse si elle a pu être ajoutée
-                        //Analyse immédiate de la saisie du mdp (respect du nombre min de caractères,
-                        // des caractères saisissables ...)
-
-                        //creer un modal?
-                    }
-                }
-                // else {
-                //     adresse email invalide redemander la saisie
-                // }
-            }
-        }
+            
         ?>
 
         <div class="main">
             <div class="loginForm">
-                <form class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form class="" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                     <label for="inputLastName">Nom</label>
                     <input type="text" id="inputLastName" name="lastname" placeholder="Saisissez votre nom de famille" required>
 

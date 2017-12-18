@@ -24,6 +24,60 @@ function redirect($url, $statusCode = 303)
    die();
 }
 
+function format($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
+function email_in_db($conn, $email)
+{
+    $selectEmail = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
+    $selectEmail->bindParam(':email', $email);
+    $selectEmail->execute();
+    $row = $selectEmail->fetchAll(PDO::FETCH_OBJ);
+
+    return !empty($row);
+}
+
+function signup()
+{
+    if (isset($_POST['connexion'])) {
+        if (isset($_POST['email'])) {
+            $email = format($_POST['mail']);
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)!= false)
+            // On vérifie grâce à une regex que l'adresse email est au bon format
+            {
+                if (!email_in_db($conn, $email)) {
+                    if (isset($_POST['password'])) {
+                        $securised = password_hash($_POST['password'], PASSWORD_ARGON2I);
+
+                        //Associer le mdp à l'adresse si elle a pu être ajoutée
+                        //Analyse immédiate de la saisie du mdp (respect du nombre min de caractères,
+                        // des caractères saisissables ...)
+                    }
+                } else {
+                    // sinon on dit à l'utilisateur que l'adresse est déja utilisée
+                }
+            }
+            // else {
+            //     adresse email invalide redemander la saisie
+            // }
+        }
+    }
+}
+
+function insert_new_user($conn, $firstname, $lastname, $email, $password)
+{
+    $insertUser = $conn->prepare("INSERT INTO USER (firstname, lastname, email, password)
+    VALUES (:firstname, :lastname, :email)");
+    $insertUser->bindParam(':firstname', $firstname);
+    $insertUser->bindParam(':lastname', $lastname);
+    $insertUser->bindParam(':email', $email);
+    $$insertUser->execute();
+}
+
 function login($conn)
 {
     if ($email = login_check($conn) !== '') {
@@ -43,11 +97,12 @@ function login($conn)
 
 function login_check($conn)
 {
-    $errors = "";
-    $email = '';
+    $wrongEmail = $wrongPassword = "";
+    $emailErr = $passwordError = $genderErr = ""; //genre inutile ici
+    $email = $password = "";
     if (isset($_POST['connexion'])) {
         if (isset($_POST['email'])) {
-            $email = $_POST['email'];
+            $email = format($_POST['email']);
             $selectUser = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
             $selectUser->bindParam(':email', $email);
             $selectUser->execute();
@@ -59,13 +114,17 @@ function login_check($conn)
                     if (password_verify($password, $hash)) {
                         return $email;
                     } else {
-                        $errors .= "Le mot de passe saisi est incorrect. ";
+                        $wrongPassword = "Le mot de passe saisi est incorrect. ";
                     }
+                } else {
+
                 }
             } else {
-                $errors .= "L'email saisi ne correspond à aucun utilisateur";
+                $wrongEmail = "L'email saisi ne correspond à aucun utilisateur";
             }
         }
+    } else {
+        $emailErr = "L'email est requis";
     }
     print($email);
     echo $errors;
@@ -98,7 +157,7 @@ function get_trips_matching_with_search($conn)
         if (isset($_POST['searchDepartureCity'])) {
             $departureCity = $_POST['searchDepartureCity'];
             if (isset($_POST['searchArrivalCity'])) {
-                $arrivalCity = $_POST['searchArrivalCity']
+                $arrivalCity = $_POST['searchArrivalCity'];
                 if (isset($_POST['date'])) {
                     $date = $_POST['date'];
                     $selectTripsMatching = $conn->prepare(
@@ -127,25 +186,45 @@ function print_no_results($queryResults)
 }
 
 function check_input_trip()
+//Check if the all the data is correct before insert in db
 {
     return true;
 }
 
-function insert_trip_in_db($conn)
+function trip_in_db($conn)
 {
+
+    $selectTrip = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
+    $selectEmail->bindParam(':email', $email);
+    $selectFirstName->execute();
+    $row = $selectEmail->fetchAll(PDO::FETCH_OBJ);
+
+    return !empty($row);
+}
+
+function insert_trip($conn, $departureCity, $arrivalCity, $date)
+{
+
     if (check_input_trip()) {
-        $insertTripInDB = $conn->prepare(
-            "INSERT INTO TRIP ()
-             WHERE TRIP.routeID = ROUTE.routeID
-               AND departureCity = :departureCity
-               AND arrivalCity = :arrivalCity
-               AND date = :date ");
+        if (!trip_in_db()) {
+            $insertTrip = $conn->prepare(
+                "INSERT INTO TRIP ()
+                WHERE TRIP.routeID = ROUTE.routeID
+                AND departureCity = :departureCity
+                AND arrivalCity = :arrivalCity
+                AND date = :date ");
+                $insertTrip->bindParam(':departureCity', $departureCity);
+                $insertTrip->bindParam(':arrivalCity', $arrivalCity);
+                $insertTrip->bindParam(':date', $date);
+                $insertTrip->execute();
+        }
     }
+}
 
 function set_header()
 {
     if (is_logged_in()) {
-        if($_SESSION['userLevel'] == 'member') {
+        if ($_SESSION['userLevel'] == 'member') {
             require_once('headerMember.php');
         } elseif ($_SESSION['userLevel'] == 'admin') {
             require_once('headerAdmin.php');
@@ -158,7 +237,7 @@ function set_header()
 function set_header_home_page()
 {
     if (is_logged_in()) {
-        if($_SESSION['userLevel'] == 'member') {
+        if ($_SESSION['userLevel'] == 'member') {
             require_once('headerHomePageMember.php');
         } elseif ($_SESSION['userLevel'] == 'admin') {
             require_once('headerHomePageAdmin.php');
@@ -173,23 +252,17 @@ function is_admin()
     return false;
 }
 
-function print_username()
-{
-    echo "Bienvenue , " . $_SESSION['username'] . "!";
-}
-
 function has_a_car($conn)
 {
-    return true;
-    // $selectCar = $conn->prepare("SELECT * FROM CAR, USER WHERE memberID = onwer");
-    // $selectCar->bindParam(':minimalReview', $minimalReview);
-    // $selectCar->execute();
-    // $car = $selectCar->setFetchMode(PDO::FETCH_ASSOC);
-    // if () {
-    //
-    // }
+    $selectCar = $conn->prepare("SELECT * FROM CAR, MEMBER WHERE memberID = onwer");
+    $selectCar->bindParam(':minimalReview', $minimalReview);
+    $selectCar->execute();
+    $car = $selectCar->fetchAll(PDO::FETCH_OBJ);
+    if (!empty($car)) {
+        return true;
+    }
+    return false;
 }
-
 
 function get_5_more_frequented_trips($conn)
 {
@@ -242,6 +315,40 @@ function members_below_limit_review($conn, $minimalReview)
         }
     } else {
         echo "<p>Il n'y a aucun membre ayant une note moyenne en dessous de " . $minimalReview ."</p>";
+    }
+}
+
+function print_trip($conn)
+{
+    $trips = get_trips_matching_with_search($conn);
+
+    if (!empty($trip)) {
+        foreach ($trips as $trip) {
+
+            $get_
+
+            echo "<div class=\"trip\">";
+                echo "<div class=\"tripTop\">";
+                    echo "<div class=\"note\">";
+                        echo "<p class=\"infosTrip\">Publiée le (date) par (prenom du conducteur)</p>";
+                    echo "</div>";
+            <div class="tripTopLeft">
+            <p class="cities">Départ <span class="glyphicon glyphicon-arrow-right"></span> Arrivée</p>
+            <hr width="50%">
+            <div class="tripPrice">
+            Prix
+            </div>
+            </p>Connectez vous pour réserver et avoir les coordonées de (prenom du conducteur)</p>
+            </div>
+            <div class="vl"></div>
+            <div class="tripTopRight">
+            </div>
+            </div>
+            <hr width="80%">
+            </div>
+        }
+    } else {
+        echo "<p>Aucun voyage ne correspond à votre recherche.<br><a href=\"search.php\">Rechercher un autre trajet</a></p>";
     }
 }
 ?>

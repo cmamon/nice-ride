@@ -26,8 +26,8 @@ if (is_admin()) {
         </header>
 
         <div class="main">
-            <div class="loginForm">
-                <form class="" method="post" action="">
+            <div class="loginForm"> <!-- Print input errors -->
+                <form class="" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                     <label for="inputEmail">Email</label>
                     <input type="email" id="inputEmail" name="email" placeholder="Email" required>
                     <!-- <br> -->
