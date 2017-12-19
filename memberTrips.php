@@ -5,29 +5,27 @@
 <html>
     <head>
         <?php require 'head.php'; ?>
-        <title>Vos voyages</title>
+        <title>Mes voyages</title>
     </head>
     <body>
         <header>
             <?php require 'header.php'; ?>
         </header>
         <div class="main">
-            <div class="sort">
-                <form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
-                    <br><br>
-                    <label for="tri">Trier par</label>
-                    <select name="tri">
-                        <option value="triChronologique">Date de Parution</option>
-                        <option value="triPrix">Prix</option>
-                    </select>
-
-                    <label>
-                        <input type="submit" name="sort" value="Valider">
-                </form>
-            </div>
             <div class="searchResults emphasized">
-                <hr id="tripLimitation">
-                <?php print_trip($conn); ?>
+                <h3>Trier par date</h3>
+                <br><br>
+                <h3>Mes trajets en tant que conducteur</h3>
+
+                <p>Liste des trajets où le membre est conducteur</p>
+                <p>SELECT date, vd, va, liste de passagers, prix FROM TRIP, MEMBER, TRAVEL WHERE (2 JOINS) AND driver = SELECT memberID FROM MEMBER</p>
+
+                <p>Avec option annulation de trajet + confirmation d'annulation avec un modal</p>
+
+                <h3>Mes trajets en tant que passager</h3>
+
+                <p>Liste des trajets où le membre est conducteur</p>
+                <p>SELECT date, vd, va, nombre de passagers, conducteur, prix FROM TRIP, MEMBER, TRAVEL WHERE (2 JOINS) AND driver  < > SELECT memberID FROM MEMBER</p>
             </div>
         </div>
 
