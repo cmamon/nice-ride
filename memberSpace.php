@@ -42,6 +42,8 @@ if(!is_logged_in()){
                         echo "<h4>Téléphone : </h4>";
                         echo "<h5>" . $member->phone . "</h5>";
                     ?>
+                    <h3><a href="memberTrips.php">Voir mes voyages</a></h3>
+
                 </div>
             </div>
         </div>
