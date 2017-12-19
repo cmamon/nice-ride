@@ -154,8 +154,9 @@ function get_trips_matching_with_search($conn)
             if (isset($_POST['date'])) {
                 $date = $_POST['date'];
                 $selectTripsMatching = $conn->prepare(
-                    "SELECT * FROM TRIP
-                     WHERE departureCity = :departureCity
+                    "SELECT * FROM TRIP, TRAVEL
+                     WHERE TRIP.tripID = TRAVEL.tripID;
+                       AND departureCity = :departureCity
                        AND arrivalCity = :arrivalCity
                        AND tripDate = :date ");
                 $selectTripsMatching->bindParam(':departureCity', $departureCity);
@@ -248,6 +249,11 @@ function insert_trip($conn, $departureCity, $arrivalCity, $date)
                 $insertTrip->execute();
         }
     }
+}
+
+function book_trip()
+{
+
 }
 
 function set_header()
@@ -352,7 +358,6 @@ function members_below_limit_review($conn, $minimalReview)
     }
 }
 
-
 function get_member($conn)
 {
     $email = format($_SESSION['email']);
@@ -362,4 +367,6 @@ function get_member($conn)
     $member = $selectMember->fetchAll(PDO::FETCH_OBJ);
     return $member[0];
 }
+
+
 ?>
