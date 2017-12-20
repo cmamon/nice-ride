@@ -1,6 +1,9 @@
 DELIMITER |
-CREATE PROCEDURE ititeraryChoice ([parametre1 [, parametre2, ...]])
+DROP PROCEDURE IF EXISTS check_member_age |
+CREATE PROCEDURE check_member_age (IN birthDate DATE)
 BEGIN
-    
+    IF birthDate > SUBDATE(CURRENT_DATE(), INTERVAL 18 YEAR) THEN
+        SIGNAL SQLSTATE '45000';
+    END IF;
 END |
 DELIMITER ;

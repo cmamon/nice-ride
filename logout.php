@@ -8,7 +8,7 @@
 <head>
     <?php require 'head.php'; ?>
 
-    <title>S'inscrire</title>
+    <title>Déconnexion</title>
     <meta http-equiv="refresh" content="2;url=index.php" />
 
 </head>

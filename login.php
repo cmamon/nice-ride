@@ -3,14 +3,10 @@
 require 'functions.php';
 $conn = connect_to_db();
 
-if (is_logged_in()) {
-    redirect('index.php', 303);
-}
-
 login($conn);
 
-if (is_admin()) {
-    $_SESSION['userLevel'] = 'admin';
+if (is_logged_in()) {
+    redirect('index.php', 303);
 }
 ?>
 <!DOCTYPE html>

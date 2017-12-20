@@ -41,41 +41,138 @@ function email_in_db($conn, $email)
     return !empty($row);
 }
 
-function signup()
+function signup_check($conn)
 {
-    if (isset($_POST['connexion'])) {
-        if (isset($_POST['email'])) {
-            $email = format($_POST['mail']);
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)!= false)
-            // On vérifie grâce à une regex que l'adresse email est au bon format
-            {
-                if (!email_in_db($conn, $email)) {
-                    if (isset($_POST['password'])) {
-                        $securised = password_hash($_POST['password'], PASSWORD_ARGON2I);
+    $firstname = $lastname = $birthDate = $email = $password = $adressStreetType = $adressStreetName = $adressCity = $phone = '';
+    $adressNumber = 0;
 
-                        //Associer le mdp à l'adresse si elle a pu être ajoutée
-                        //Analyse immédiate de la saisie du mdp (respect du nombre min de caractères,
-                        // des caractères saisissables ...)
+    if (isset($_POST['connexion'])) {
+        if (isset($_POST['firstname'])) {
+            $firstname = $_POST['firstname'];
+            if (isset($_POST['lastname'])) {
+                $lastname = $_POST['lastname'];
+                if (isset($_POST['birthDate'])) {
+                    $birthDate = $_POST['birthDate'];
+                    if (isset($_POST['email'])) {
+                        $email = format($_POST['email']);
+                        $selectUser = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
+                        $selectUser->bindParam(':email', $email);
+                        $selectUser->execute();
+                        $user = $selectUser->fetchAll(PDO::FETCH_OBJ);
+                        if (empty($user[0]->email)) {
+                            if (isset($_POST['password'])) {
+                                $password = $_POST['password'];
+                                if (isset($_POST['passwordConfirmation'])) {
+                                    $passwordConfirmation = $_POST['passwordConfirmation'];
+                                    if ($password === $passwordConfirmation) {
+                                        $password = password_hash($password, PASSWORD_DEFAULT);
+                                        if (isset($_POST['adressNumber'])) {
+                                            $adressNumber = $_POST['adressNumber'];
+                                            if (isset($_POST['adressStreetType'])) {
+                                                $adressStreetType = $_POST['adressStreetType'];
+                                                if (isset($_POST['adressStreetName'])) {
+                                                    $adressStreetName = $_POST['adressStreetName'];
+                                                    if (isset($_POST['adressCity'])) {
+                                                        $adressCity = $_POST['adressCity'];
+                                                        if (isset($_POST['phone'])) {
+                                                            $phone = $_POST['phone'];
+                                                        } else {
+                                                            return false;
+                                                        }
+                                                    } else {
+                                                        return false;
+                                                    }
+                                                } else {
+                                                    return false;
+                                                }
+                                            } else {
+                                                return false;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    } else {
+                                        echo "Les mots de passe ne correspondent pas";
+                                        return false;
+                                    }
+                                } else {
+                                    echo "Le champ confirmation du mot de passe est requis";
+                                    return false;
+                                }
+                            } else {
+                                echo "Le champ mot de passe est requis";
+                                return false;
+                            }
+                        } else {
+                            echo "L'email choisi est déja utilisé par un autre utilisateur";
+                            return false;
+                        }
+                    } else {
+                        echo "Le champ email est requis";
+                        return false;
                     }
                 } else {
-                    // sinon on dit à l'utilisateur que l'adresse est déja utilisée
+                    echo "Le champ Date de naissance est requis";
+                    return false;
                 }
+            } else {
+                echo "Le champ nom de famille est requis";
+                return false;
             }
-            // else {
-            //     adresse email invalide redemander la saisie
-            // }
+        } else {
+            echo "Le champ prénom est requis";
+            return false;
         }
+    } else {
+        return false;
     }
+
+    $info = array($firstname, $lastname, $birthDate, $email, $password, $adressNumber, $adressStreetType, $adressStreetName, $adressCity, $phone);
+    return $info;
 }
 
-function insert_new_user($conn, $firstname, $lastname, $email, $password)
+function insert_new_member($conn)
 {
-    $insertUser = $conn->prepare("INSERT INTO USER (firstname, lastname, email, password)
-    VALUES (:firstname, :lastname, :email)");
-    $insertUser->bindParam(':firstname', $firstname);
-    $insertUser->bindParam(':lastname', $lastname);
-    $insertUser->bindParam(':email', $email);
-    $$insertUser->execute();
+
+    if (($info = signup_check($conn)) != false) {
+            print_r($info);
+            $insertUser = $conn->prepare("INSERT INTO USER (firstname, lastname, admin, email, password, adressNumber, adressStreetType, adressStreetName, adressCity, phone)
+            VALUES (:firstname, :lastname, 0, :email, :password, :adressNumber, :adressStreetType, :adressStreetName, :adressCity, :phone)");
+            $insertUser->bindParam(':firstname', $info[0]);
+            $insertUser->bindParam(':lastname', $info[1]);
+            $insertUser->bindParam(':email', $info[3]);
+            $insertUser->bindParam(':password', $info[4]);
+            $insertUser->bindParam(':adressNumber', $info[5], PDO::PARAM_INT);
+            $insertUser->bindParam(':adressStreetType', $info[6]);
+            $insertUser->bindParam(':adressStreetName', $info[7]);
+            $insertUser->bindParam(':adressCity', $info[8]);
+            $insertUser->bindParam(':phone', $info[9]);
+            $insertUser->execute();
+
+
+        // On récupère l 'id de l'utilisateur que l'on vient de créer
+        try {
+            $email = $info[3];
+            $selectUserID = $conn->prepare("SELECT userID FROM USER WHERE email = :email");
+            echo "string";
+            $selectUserID->bindParam(':email', $email);
+            $selectUserID->execute();
+            $userID = $selectUserID->fetchAll(PDO::FETCH_OBJ);
+            $userID = $userID[0]->userID;
+            echo $userID;
+
+            $birthDate = transform_date($info[2]);
+
+            $insertMember = $conn->prepare("INSERT INTO MEMBER (memberID, birthDate,review) VALUES (:memberID, :birthDate, 0.0)");
+            $insertUser->bindParam(':birthDate', $birthDate);
+            $insertUser->bindParam(':memberID', $userID);
+            $insertMember->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return true;
+    }
+    return false;
 }
 
 function login($conn)
@@ -94,10 +191,15 @@ function login($conn)
         $row = $selectFirstName->fetchAll(PDO::FETCH_OBJ);
         $firstname = $row[0]->firstname;
 
+        $_SESSION['username'] = $firstname;
         $_SESSION['loggedin'] = true;
         $_SESSION['email'] = $email;
-        $_SESSION['username'] = $firstname;
-        $_SESSION['userLevel'] = 'member';
+
+        if (is_admin($conn)) {
+            $_SESSION['userLevel'] = 'admin';
+        } else {
+            $_SESSION['userLevel'] = 'member';
+        }
     }
 }
 
@@ -145,23 +247,51 @@ function cant_access_page()
     }
 }
 
-function get_trips_matching_with_search($conn)
+function set_order() // A TESTER
 {
+    $order = 'TRIP.price';
+    if (isset($_POST['sort'])) {
+        $sort = ($_POST['sort']);
+        if ($sort === 'Date de Parution') {
+            $order = 'TRAVEL.travelDate';
+        }
+    }
+    return $order;
+}
+
+function transform_date($dateDatepicker)
+{
+    $dateSQL= "";
+    $dateSQL .= substr($dateDatepicker, 6, 9);
+    $date .= "-";
+    $dateSQL .= substr($dateDatepicker, 3, 4);
+    $date .= "-";
+    $dateSQL .= substr($dateDatepicker, 0, 1);
+
+    return $dateSQL;
+}
+
+function get_trips_matching_with_search($conn, $order)
+{
+    $order = set_order();
     if (isset($_POST['searchDepartureCity'])) {
         $departureCity = $_POST['searchDepartureCity'];
         if (isset($_POST['searchArrivalCity'])) {
             $arrivalCity = $_POST['searchArrivalCity'];
             if (isset($_POST['date'])) {
                 $date = $_POST['date'];
+                $date = transform_date($date);
                 $selectTripsMatching = $conn->prepare(
                     "SELECT * FROM TRIP, TRAVEL
                      WHERE TRIP.tripID = TRAVEL.tripID;
                        AND departureCity = :departureCity
                        AND arrivalCity = :arrivalCity
-                       AND tripDate = :date ");
+                       AND tripDate = :date
+                     ORDER BY :order");
                 $selectTripsMatching->bindParam(':departureCity', $departureCity);
                 $selectTripsMatching->bindParam(':arrivalCity', $arrivalCity);
                 $selectTripsMatching->bindParam(':tripDate', $date);
+                $selectTripsMatching->bindParam(':order', $order);
                 $selectTripsMatching->execute();
                 $tripsMatching = $selectTripsMatching->fetchAll(PDO::FETCH_OBJ);
             }
@@ -219,14 +349,47 @@ function print_no_results($queryResults)
 function check_input_trip()
 //Check if the all the data is correct before insert in db
 {
-    return true;
+    $departureCity = $arrivalCity = $tripDate = '';
+    if (isset($_POST['departureCity'])) {
+        $departureCity = $_POST['departureCity'];
+        if (isset($_POST['arrivalCity'])) {
+            $arrivalCity = $_POST['arrivalCity'];
+            if (isset($_POST['tripDate'])) {
+                $tripDate = $_POST['tripDate'];
+            } else {
+                echo "Vous devez saisir une ville date";
+                return false;
+            }
+        } else {
+            echo "Vous devez saisir une ville d'arrivée";
+            return false;
+        }
+    } else {
+        echo "Vous devez saisir une ville de départ";
+        return false;
+    }
+    $tripData = array($departureCity, $arrivalCity, $tripDate);
+    return $tripData;
 }
 
-function trip_in_db($conn)
+function travel_in_db($conn, $travel)
 {
+    $email = $_SESSION['email'];
 
-    $selectTrip = $conn->prepare("SELECT * FROM USER WHERE USER.email = :email");
-    $selectEmail->bindParam(':email', $email);
+    $selectTrip = $conn->prepare(
+        "SELECT *
+        FROM TRIP, TRAVEL, USER, MEMBER
+        WHERE TRIP.tripID = TRAVEL.tripID
+          AND TRIP.memberID = MEMBER.memberID
+          AND USER.userID = MEMBER.memberID
+          AND USER.email = :email
+          AND MEMBER.driver = USER.userID
+          AND departureCity = :departureCity
+          AND arrivalCity = :arrivalCity
+          AND tripDate = :tripDate ");
+    $selectEmail->bindParam(':departureCity', $travel[0]);
+    $selectEmail->bindParam(':arrivalCity', $travel[1]);
+    $selectEmail->bindParam(':tripDate', $travel[2]);
     $selectFirstName->execute();
     $row = $selectEmail->fetchAll(PDO::FETCH_OBJ);
 
@@ -235,25 +398,35 @@ function trip_in_db($conn)
 
 function insert_trip($conn, $departureCity, $arrivalCity, $date)
 {
-    if (check_input_trip()) {
-        if (!trip_in_db()) {
-            $insertTrip = $conn->prepare(
-                "INSERT INTO CAR ()
-                WHERE TRIP.routeID = ROUTE.routeID
-                AND departureCity = :departureCity
-                AND arrivalCity = :arrivalCity
-                AND date = :date ");
-                $insertTrip->bindParam(':departureCity', $departureCity);
-                $insertTrip->bindParam(':arrivalCity', $arrivalCity);
+    if (($trip = check_input_trip()) != false) {
+        if (!travel_in_db($conn)) {
+            if (!trip_in_db()) {
+                $insertTrip = $conn->prepare(
+                    "INSERT INTO TRIP (departureCity, arrivalCity)
+                     VALUES (:departureCity, :arrivalCity)
+                    WHERE TRIP.routeID = ROUTE.routeID
+                    ");
+                $insertTrip->bindParam(':departureCity', $trip[0]);
+                $insertTrip->bindParam(':arrivalCity', $trip[1]);
                 $insertTrip->bindParam(':date', $date);
                 $insertTrip->execute();
+            } else {
+                //on récupère l'id du voyage en question, on l'utilise pour l'insérer dans la table travel avec l'id du conducteur. 
+
+            }
+        } else {
+            echo "<h4>Vous avez déja proposé un voyage pour cette date. Vous ne pouvez pas en proposer d'avantage.<h4>";
         }
     }
 }
 
 function book_trip()
 {
+    if (is_logged_in()) {
 
+    } else {
+        echo "Vous n'êtes pas connectés. Vous ne pouvez pas réserver de voyages".
+    }
 }
 
 function set_header()
@@ -282,15 +455,21 @@ function set_header_home_page()
     }
 }
 
-function is_admin()
+function is_admin($conn)
 {
-    return false;
+    $email = $_SESSION['email'];
+    $selectStatus = $conn->prepare("SELECT admin FROM USER WHERE email = :email");
+    $selectStatus->bindParam(':email', $email);
+    $selectStatus->execute();
+    $status = $selectStatus->fetchAll(PDO::FETCH_OBJ);
+    $status = $status[0]->admin;
+
+    return $status;
 }
 
 function has_a_car($conn)
 {
     $selectCar = $conn->prepare("SELECT * FROM CAR, MEMBER WHERE memberID = onwer");
-    $selectCar->bindParam(':minimalReview', $minimalReview);
     $selectCar->execute();
     $car = $selectCar->fetchAll(PDO::FETCH_OBJ);
     if (!empty($car)) {
@@ -337,21 +516,17 @@ function members_below_limit_review($conn, $minimalReview)
     $selectLowReviewMembers->execute();
     $lowReviewmembers = $selectLowReviewMembers->fetchAll(PDO::FETCH_OBJ);
 
-    if ($lowReviewmembers) {
+    if (!empty($lowReviewmembers)) {
         foreach ($lowReviewmembers as $review) {
-            if ($review < $minimalReview) {
-                echo "<ul>";
-                echo "<li>";
-                echo "<div>";
-                echo "Nom Prénom";
-                print_star_rating($review);
-                echo "<a href=\"#\">Voir le profil</a>";
-                echo "</div>";
-                echo"</li>";
-                echo"</ul>";
-            } else {
-                echo "<p>Il n'y a aucun membre ayant une note moyenne en dessous de " . $minimalReview ."</p>";
-            }
+            echo "<ul>";
+            echo "<li>";
+            echo "<div>";
+            echo "Nom Prénom";
+            print_star_rating($review);
+            echo "<a href=\"#\">Voir le profil</a>";
+            echo "</div>";
+            echo"</li>";
+            echo"</ul>";
         }
     } else {
         echo "<p>Il n'y a aucun membre ayant une note moyenne en dessous de " . $minimalReview ."</p>";

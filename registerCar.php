@@ -30,7 +30,7 @@
                     <div class="part2">
                         <form class="" action="index.html" method="post">
                             <h4>Immatriculation</h4>
-                            <input type="text" name="" value="" placeholder="Numéro d'immatriculation">
+                            <input type="text" name="" value="" size=12 placeholder="Numéro d'immatriculation">
                             <br>
                             <br>
                             <h4>Importez une image de votre voiture</h4>

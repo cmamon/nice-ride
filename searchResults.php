@@ -15,8 +15,8 @@
             <div class="sort">
                 <form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
                     <br><br>
-                    <label for="tri">Trier par</label>
-                    <select name="tri">
+                    <label for="sort">Trier par</label>
+                    <select name="sort">
                         <option value="triChronologique">Date de Parution</option>
                         <option value="triPrix">Prix</option>
                     </select>

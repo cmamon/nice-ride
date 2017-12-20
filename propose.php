@@ -28,27 +28,25 @@ if(!is_logged_in()){
                         <br>
                         <form method="post">
                             <label for="departureCity">De</label>
-                            <input type="text" id="departureCity" class="cities" name="searchDepartureCity" placeholder="Ville de départ">
+                            <input type="text" id="departureCity" class="cities" name="departureCity" placeholder="Ville de départ">
                             <br>
-                            <label for="arrivalCity">Adresse de RDV</label>
+                            <!-- <label for="arrivalCity">Adresse de RDV</label>
                             <input type="text" id="meetingAdress" class="cities" name="meetingAdress" placeholder="n°rue Intitulé">
-                            <br>
+                            <br> -->
                             <label for="arrivalCity">À</label>
-                            <input type="text" id="arrivalCity" class="cities" name="searchArrivalCity" placeholder="Ville d'arrivée">
+                            <input type="text" id="arrivalCity" class="cities" name="arrivalCity" placeholder="Ville d'arrivée">
                             <br>
-                            <label for="arrivalCity">Adresse de dépose</label>
+                            <!-- <label for="arrivalCity">Adresse de dépose</label>
                             <input type="text" id="dropAddress" class="cities" name="dropAdress" placeholder="n°rue Intitulé">
-                            <br>
-                            <label for="date">Le</label>
-                            <div class="input-group date">
-                                <input type="date" id="date" name="tripDate" placeholder="Date">
-                            </div>
-                            <br>
+                            <br> -->
+                            <label for="datepicker">Le</label>
+                            <input type="date" id="datepicker" name="tripDate" placeholder="Date">
+                            <br><br><br>
                         </form>
                     </div>
                     <br><br>
                     <div class="rule">
-                        <hr style="border:3px solid #AAA; border-radius:3px; width:90%">
+                        <hr style="border:3px solid #AAA; border-radius:3px; width:80%">
                     </div>
                     <h3>Renseignez le prix</h3>
                     <form class="" action="propose2.html" method="post">
