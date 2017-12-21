@@ -1,4 +1,12 @@
-<?php require 'functions.php';?>
+<?php
+
+require 'functions.php';
+
+if (isset($_POST['searchButton'])) {
+    redirect('searchResults.php', 303);
+}
+
+?>
 
 <!DOCTYPE html>
 <html>
@@ -10,19 +18,22 @@
 </head>
 <body>
     <header>
-        <?php require 'header.php'; ?>
+        <?php
+            set_header();
+            get_trips_matching_with_search($conn);
+         ?>
     </header>
     <div class="main">
         <div class="searchGroup emphasized">
             <form action="search.php" method="post">
                 <label for="departureCity">Ville de départ</label><br>
-                <input type="text" id="departureCity" class="cities" name="searchDepartureCity" placeholder="Ville de départ">
+                <input type="text" id="departureCity" class="cities" name="searchDepartureCity" placeholder="Ville de départ" required>
                 <br>
                 <label for="departureCity">Ville de d'arrivée</label><br>
-                <input type="text" id="arrivalCity" class="cities" name="searchArrivalCity" placeholder="Ville d'arrivée">
+                <input type="text" id="arrivalCity" class="cities" name="searchArrivalCity" placeholder="Ville d'arrivée" required>
                 <br>
                 <label for="departureCity">Date de votre voyage</label><br>
-                <input type="text" id="datepicker" name="date" placeholder="Date">
+                <input type="text" id="datepicker" name="travelDate" placeholder="Date" required>
                 <br><br>
                 <button type="submit" class="button buttonHome" name="searchButton">Rechercher</button>
             </form>

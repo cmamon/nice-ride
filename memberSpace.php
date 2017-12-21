@@ -11,7 +11,7 @@ if(!is_logged_in()){
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.php'; ?>
+        <?php require 'memberHeader.php'; ?>
         <title>QUENETTE Christophe</title> <!-- Set name by a request to the database -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
@@ -31,7 +31,7 @@ if(!is_logged_in()){
                         <div id="myModal" class="modal">
                             <div class="modal-content">
                                 <span class="close">&times;</span>
-                                <form class="" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">                                    
+                                <form class="" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
                                     <input type="file" name="carImg">
                                     <br>
                                     <input type="submit">

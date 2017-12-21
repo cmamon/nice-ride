@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php require 'head.php'; ?>
+    <?php set_header(); ?>
 
     <title>Inscription Réussie</title>
 

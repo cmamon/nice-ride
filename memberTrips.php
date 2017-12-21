@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.php'; ?>
+        <?php require 'headerMember.php'; ?>
         <title>Mes voyages</title>
     </head>
     <body>

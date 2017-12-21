@@ -379,22 +379,15 @@ label {
 }
 
 .trip {
-    width: 40%;
-    border: 2px solid #008CBA;
-    /*border-left: 2px solid #008CBA;*/
-    /*border-bottom: 2px solid #008CBA;*/
-    border-style: inset;
-    border-radius: 4px;
 }
 
-.tripTopLeft{
+.tripLeft{
     float : left;
-    width: 60%;
     display: inline-block;
     font-weight: bold;
 }
 
-.tripTopRight{
+.tripRight{
     /*float: right;*/
     display: inline-block;
 }
@@ -408,11 +401,10 @@ label {
 p.infosTrip {
     position : relative;
     top: 10px;
-    width: 10em;
     line-height: 1.8;
 }
 
-p.cities {
+p.citiesTrip {
     text-align: center;
 }
 

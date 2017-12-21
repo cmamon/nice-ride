@@ -17,11 +17,11 @@ INSERT INTO USER VALUES (2, 'John', 'Doe', 0, 'john.doe@gmail.com',
 INSERT INTO ADMIN VALUES (1); -- L'utilisateur QUENETTE Christophe est administrateur.
 
 -- INSERT VALUES IN MEMBER
-INSERT INTO MEMBER (memberID, birthDate, review) VALUES (2, "1990-12-31", 5.6); -- Test de note trop élévée
+INSERT INTO MEMBER (memberID, birthDate, review) VALUES (2, "1990-12-31", 1.7); -- Test de note trop élévée
 
 -- INSERT VALUES IN CAR
 INSERT INTO CAR VALUES (1, 'AA-123-AA', 2, 'Kangoo', 'Renault', 2009, 5);
--- INSERT INTO CAR VALUES (2, 'AA-123-BB', 6, 'Prius', 'Toyota', 2009, 5);
+-- INSERT INTO CAR VALUES (2, 'AA-123-BB', 3, 'Prius', 'Toyota', 2009, 5);
 
 -- INSERT VALUES IN ROUTE
 INSERT INTO TRIP VALUES (1, 'Lille, France', 'Montpellier, France', 45);

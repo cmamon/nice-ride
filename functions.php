@@ -2,10 +2,26 @@
 
 session_start();
 
+// function connect_to_db()
+// {
+//     $servername = "prodpeda-venus";
+//     $username = "cquenette";
+//     $password = "galantis";
+//     try {
+//         $conn = new PDO("mysql:host=$servername;dbname=cquenette;charset=utf8;", $username, $password);
+//         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//         // echo "Connexion réussie";
+//
+//     } catch (Exception $e) {
+//         echo "Connection échouée: " . $e->getMessage();
+//     }
+//     return $conn;
+// }
+
 function connect_to_db()
 {
-    $servername = "prodpeda-venus";
-    $username = "cquenette";
+    $servername = "localhost";
+    $username = "phpmyadmin";
     $password = "galantis";
     try {
         $conn = new PDO("mysql:host=$servername;dbname=cquenette;charset=utf8;", $username, $password);
@@ -133,7 +149,6 @@ function signup_check($conn)
 
 function insert_new_member($conn)
 {
-
     if (($info = signup_check($conn)) != false) {
             print_r($info);
             $insertUser = $conn->prepare("INSERT INTO USER (firstname, lastname, admin, email, password, adressNumber, adressStreetType, adressStreetName, adressCity, phone)
@@ -154,7 +169,6 @@ function insert_new_member($conn)
         try {
             $email = $info[3];
             $selectUserID = $conn->prepare("SELECT userID FROM USER WHERE email = :email");
-            echo "string";
             $selectUserID->bindParam(':email', $email);
             $selectUserID->execute();
             $userID = $selectUserID->fetchAll(PDO::FETCH_OBJ);
@@ -262,16 +276,16 @@ function set_order() // A TESTER
 function transform_date($dateDatepicker)
 {
     $dateSQL= "";
-    $dateSQL .= substr($dateDatepicker, 6, 9);
-    $date .= "-";
-    $dateSQL .= substr($dateDatepicker, 3, 4);
-    $date .= "-";
-    $dateSQL .= substr($dateDatepicker, 0, 1);
+    $dateSQL .= substr($dateDatepicker, -4);
+    $dateSQL .= "-";
+    $dateSQL .= substr($dateDatepicker, 3, 2);
+    $dateSQL .= "-";
+    $dateSQL .= substr($dateDatepicker, 0, 2);
 
     return $dateSQL;
 }
 
-function get_trips_matching_with_search($conn, $order)
+function get_trips_matching_with_search($conn)
 {
     $order = set_order();
     if (isset($_POST['searchDepartureCity'])) {
@@ -279,53 +293,91 @@ function get_trips_matching_with_search($conn, $order)
         if (isset($_POST['searchArrivalCity'])) {
             $arrivalCity = $_POST['searchArrivalCity'];
             if (isset($_POST['date'])) {
-                $date = $_POST['date'];
-                $date = transform_date($date);
-                $selectTripsMatching = $conn->prepare(
-                    "SELECT * FROM TRIP, TRAVEL
-                     WHERE TRIP.tripID = TRAVEL.tripID;
-                       AND departureCity = :departureCity
-                       AND arrivalCity = :arrivalCity
-                       AND tripDate = :date
-                     ORDER BY :order");
-                $selectTripsMatching->bindParam(':departureCity', $departureCity);
-                $selectTripsMatching->bindParam(':arrivalCity', $arrivalCity);
-                $selectTripsMatching->bindParam(':tripDate', $date);
-                $selectTripsMatching->bindParam(':order', $order);
-                $selectTripsMatching->execute();
-                $tripsMatching = $selectTripsMatching->fetchAll(PDO::FETCH_OBJ);
+                try {
+                    $travelDate = $_POST['date'];
+                    $travelDate = transform_date($travelDate);
+                    $selectTripsMatching = $conn->prepare(
+                        "SELECT * FROM TRIP, TRAVEL
+                        WHERE TRIP.tripID = TRAVEL.tripID
+                        AND departureCity = :departureCity
+                        AND arrivalCity = :arrivalCity
+                        AND travelDate = :travelDate
+                        ORDER BY $order");
+                        $selectTripsMatching->bindParam(':departureCity', $departureCity);
+                        $selectTripsMatching->bindParam(':arrivalCity', $arrivalCity);
+                        $selectTripsMatching->bindParam(':travelDate', $travelDate);
+                        $selectTripsMatching->execute();
+                        $tripsMatching = $selectTripsMatching->fetchAll(PDO::FETCH_OBJ);
+                        $_SESSION['tripsMatching'] = $tripsMatching;
+                } catch (PDOException $e) {
+                    echo $e->getMessage();
+                }
+
             }
         }
     }
     return $tripsMatching;
 }
 
+function get_driver_first_name($conn, $tripID, $travelDate)
+{
+    try {
+        $selectDriverID = $conn->prepare(
+            "SELECT MEMBER.driverID
+             FROM MEMBER, TRAVEL, TRIP
+             WHERE MEMBER.memberID = TRAVEL.memberID
+             AND TRIP.tripID = TRAVEL.tripID
+             AND TRIP.tripID = :tripID
+             AND TRAVEL.travelDate = :travelDate");
+        $selectDriverID->bindParam(':tripID', $tripID);
+        $selectDriverID->bindParam(':travelDate', $travelDate);
+        $driverID = $selectDriverID->fetchAll(PDO::FETCH_OBJ);
+        $driverID = $driverID[0]->driverID;
+
+        echo $driverID;
+
+    $selectFN = $conn->prepare(
+        "SELECT USER.firstname
+        FROM USER, MEMBER
+        WHERE USER.userID = MEMBER.memberID
+          AND memberID = :driverID");
+    $selectFN->bindParam(':driverID', $driverID);
+    $selectFN->execute();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+    $firstname = $selectFN->fetchAll(PDO::FETCH_OBJ);
+    $firstname = $firstname[0]->firstname;
+
+    echo $firstname;
+
+    return $firstname;
+}
+
 function print_trip($conn)
 {
-    $trips = get_trips_matching_with_search($conn);
+    $trips = $_SESSION['tripsMatching'];
+    // print_r($trips);
 
-    if (!empty($trip)) {
+    if (!empty($trips)) {
         foreach ($trips as $trip) {
+            $firstname = get_driver_first_name($conn, $trip->tripID, $trip->travelDate);
             echo "<div class=\"trip\">";
-                echo "<div class=\"tripTop\">";
                     echo "<div class=\"note\">";
-                        echo "<p class=\"infosTrip\">Publiée le (date) par (prenom du conducteur)</p>";
+                        echo "<p class=\"infosTrip\">Publiée par " . $firstname . "</p>";
                     echo "</div>";
                     echo "<div class=\"tripTopLeft\">";
-                        echo "<p class=\"cities\">Départ <span class=\"glyphicon glyphicon-arrow-right\"></span> Arrivée</p>";
-                        echo "<hr width=\"50%\">";
+                        echo "<p class=\"citiesTrip\">" . $trip->departureCity . "&nbsp;&nbsp; <span class=\"glyphicon glyphicon-arrow-right\"></span>&nbsp;&nbsp;". $trip->arrivalCity ." &nbsp;&nbsp;&nbsp;&nbsp; Le " . date("d-m-Y", strtotime($trip->travelDate)) . "</p>";
                         echo "<div class=\"tripPrice\">";
-                            echo $trip->price . " euros.";
+                            echo $trip->price . " <i class=\"fa fa-eur\" aria-hidden=\"true\"></i>";
                         echo "</div>";
                     echo "</div>";
-                echo "</div>";
-                echo "<div class=\"vl\"></div>";
-                echo "<div class=\"tripTopRight\">";
+                echo "<div class=\"tripRight\">";
                 if (!is_logged_in()) {
-                    echo "</p>Connectez vous pour réserver et avoir les coordonées de (prenom du conducteur)</p>";
+                    echo "</p>Connectez vous pour réserver et avoir les coordonées de " . $firstname . "</p>";
                 } else {
                     echo "<div>";
-                        echo "<p>(prenom du conducteur) [dropdown] avec son nuéro de téléphone</p>";
+                        echo "<p> ". $firstname ." [dropdown] avec son nuéro de téléphone</p>";
                         echo "<br>";
                         echo "<a href=\"book.php\">Réserver</a>";
                     echo "</div>";
@@ -349,13 +401,13 @@ function print_no_results($queryResults)
 function check_input_trip()
 //Check if the all the data is correct before insert in db
 {
-    $departureCity = $arrivalCity = $tripDate = '';
+    $departureCity = $arrivalCity = $travelDate = '';
     if (isset($_POST['departureCity'])) {
         $departureCity = $_POST['departureCity'];
         if (isset($_POST['arrivalCity'])) {
             $arrivalCity = $_POST['arrivalCity'];
-            if (isset($_POST['tripDate'])) {
-                $tripDate = $_POST['tripDate'];
+            if (isset($_POST['travelDate'])) {
+                $travelDate = $_POST['travelDate'];
             } else {
                 echo "Vous devez saisir une ville date";
                 return false;
@@ -368,7 +420,7 @@ function check_input_trip()
         echo "Vous devez saisir une ville de départ";
         return false;
     }
-    $tripData = array($departureCity, $arrivalCity, $tripDate);
+    $tripData = array($departureCity, $arrivalCity, $travelDate);
     return $tripData;
 }
 
@@ -386,10 +438,10 @@ function travel_in_db($conn, $travel)
           AND MEMBER.driver = USER.userID
           AND departureCity = :departureCity
           AND arrivalCity = :arrivalCity
-          AND tripDate = :tripDate ");
+          AND travelDate = :travelDate ");
     $selectEmail->bindParam(':departureCity', $travel[0]);
     $selectEmail->bindParam(':arrivalCity', $travel[1]);
-    $selectEmail->bindParam(':tripDate', $travel[2]);
+    $selectEmail->bindParam(':travelDate', $travel[2]);
     $selectFirstName->execute();
     $row = $selectEmail->fetchAll(PDO::FETCH_OBJ);
 
@@ -411,7 +463,7 @@ function insert_trip($conn, $departureCity, $arrivalCity, $date)
                 $insertTrip->bindParam(':date', $date);
                 $insertTrip->execute();
             } else {
-                //on récupère l'id du voyage en question, on l'utilise pour l'insérer dans la table travel avec l'id du conducteur. 
+                //on récupère l'id du voyage en question, on l'utilise pour l'insérer dans la table travel avec l'id du conducteur.
 
             }
         } else {
@@ -423,9 +475,9 @@ function insert_trip($conn, $departureCity, $arrivalCity, $date)
 function book_trip()
 {
     if (is_logged_in()) {
-
+        // something
     } else {
-        echo "Vous n'êtes pas connectés. Vous ne pouvez pas réserver de voyages".
+        echo "Vous n'êtes pas connectés. Vous ne pouvez pas réserver de voyages";
     }
 }
 

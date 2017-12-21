@@ -4,12 +4,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require 'head.php'; ?>
+        <?php include 'head.php'; ?>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <title>Résultats de la recherche</title>
     </head>
     <body>
         <header>
-            <?php require 'header.php'; ?>
+            <?php set_header(); ?>
         </header>
         <div class="main">
             <div class="sort">
@@ -20,7 +21,6 @@
                         <option value="triChronologique">Date de Parution</option>
                         <option value="triPrix">Prix</option>
                     </select>
-
                     <label>
                         <input type="submit" name="sort" value="Valider">
                 </form>

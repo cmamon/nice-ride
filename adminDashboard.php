@@ -2,9 +2,9 @@
 require 'functions.php';
 $conn = connect_to_db();
 
-if (!is_logged_in() || !is_admin()) {
-    redirect('index.php', 303);
-}
+// if (!is_logged_in() || !is_admin()) {
+//     redirect('index.php', 303);
+// }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -19,11 +19,11 @@ if (!is_logged_in() || !is_admin()) {
         <?php set_header(); ?>
     </header>
 
-    <div class="main">
+    <div class="main emphasized">
         <?php
 
-        echo "<h2>Statistiques générales :</h2>";
-        echo "<h3>Top 5 des trajets les plus fréquentés :</h3>";
+        echo "<h3>Statistiques générales :</h3>";
+        echo "<h4>Top 5 des trajets les plus fréquentés :</h4>";
 
         echo "<ul>";
         echo "<li>Bordeaux - Paris</li>";
@@ -33,7 +33,7 @@ if (!is_logged_in() || !is_admin()) {
         }
         echo"</ul>";
 
-        echo "<h3>Top 5 des trajets les moins fréquentés:</h3>";
+        echo "<h4>Top 5 des trajets les moins fréquentés:</h4>";
         echo "<ul>";
         echo "<li>Montpellier - Maugio</li>";
         for ($i=0; $i < 0; $i++) {
@@ -42,7 +42,7 @@ if (!is_logged_in() || !is_admin()) {
         }
         echo "</ul>";
 
-        echo "<h3>Top 5 des trajets les plus onéreux:</h3>";
+        echo "<h4>Top 5 des trajets les plus onéreux:</h4>";
         echo "<ul>";
         echo "<li>Bordeaux - Paris</li>";
         for ($i=0; $i < 0; $i++) {
@@ -51,9 +51,9 @@ if (!is_logged_in() || !is_admin()) {
         }
         echo "</ul>";
 
-        echo "<h2>Membres</h2>";
+        echo "<h3>Membres</h3>";
 
-        echo "<h3>Membre(s) dans le rouge</h3>";
+        echo "<h4>Membre(s) dans le rouge</h4>";
 
         //On récupère la limite minimale pour la note d'un membre
         $controls = simplexml_load_file("XML/controls.xml");
@@ -67,12 +67,12 @@ if (!is_logged_in() || !is_admin()) {
         echo "<input type=\"submit\" value=\"Modifier\">";
         echo "</form>";
 
-        echo "<footer>";
-        require 'footer.php';
-        echo "</footer>";
         ?>
+        </div>
+        <footer>
+        <?php require 'footer.php'; ?>
+        </footer>
 
-    </div>
 
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 </body>
