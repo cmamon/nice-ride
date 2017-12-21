@@ -563,19 +563,27 @@ function print_star_rating($review)
 
 function members_below_limit_review($conn, $minimalReview)
 {
-    $selectLowReviewMembers = $conn->prepare("SELECT * FROM MEMBER WHERE review < :minimalReview");
+    $selectLowReviewMembers = $conn->prepare(
+        "SELECT *
+        FROM USER, MEMBER
+        WHERE USER.userID = MEMBER.memberID
+          AND review < :minimalReview");
     $selectLowReviewMembers->bindParam(':minimalReview', $minimalReview);
     $selectLowReviewMembers->execute();
     $lowReviewmembers = $selectLowReviewMembers->fetchAll(PDO::FETCH_OBJ);
 
     if (!empty($lowReviewmembers)) {
-        foreach ($lowReviewmembers as $review) {
+        foreach ($lowReviewmembers as $member) {
+            $review = $member->review;
+            $firstname = $member->firstName;
+            $lastname = $member->lastName;
+
             echo "<ul>";
             echo "<li>";
             echo "<div>";
-            echo "Nom Prénom";
+            echo  $lastname . " ". $firstname . " ";
             print_star_rating($review);
-            echo "<a href=\"#\">Voir le profil</a>";
+            echo "<br><a href=\"#\">Voir le profil</a>";
             echo "</div>";
             echo"</li>";
             echo"</ul>";
